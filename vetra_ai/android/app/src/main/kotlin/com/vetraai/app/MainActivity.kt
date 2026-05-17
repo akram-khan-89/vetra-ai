@@ -1,4 +1,4 @@
-package com.example.vetra_ai
+package com.vetraai.app
 
 import io.flutter.embedding.android.FlutterActivity
 

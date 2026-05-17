@@ -22,3 +22,6 @@ ios/Runner.xcworkspace/
 # Node backend
 node_modules/
 dist/
+
+# Firebase Admin SDK (IMPORTANT)
+firebase-service-account.json
