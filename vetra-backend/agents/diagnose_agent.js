@@ -1,15 +1,11 @@
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+const { callGemini } = require('../utils/gemini_router');
 const diseases = require('../data/diseases.json');
 require('dotenv').config();
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 async function diagnoseAgent(symptoms, animalType, visionFindings = []) {
   console.log(`[DIAGNOSE] Starting diagnosis for animal: ${animalType}`);
   console.log(`[DIAGNOSE] Symptoms received: ${symptoms.join(', ')}`);
   console.log(`[DIAGNOSE] Vision findings: ${visionFindings.length > 0 ? visionFindings.join(', ') : 'none'}`);
-
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-lite' });
 
   // Build a concise disease reference from the DB for context
   const diseaseContext = diseases.diseases
@@ -46,10 +42,15 @@ async function diagnoseAgent(symptoms, animalType, visionFindings = []) {
     }
   `;
 
-  console.log(`[DIAGNOSE] Calling Gemini API...`);
-  const result = await model.generateContent(prompt);
-  let text = result.response.text();
-  console.log(`[DIAGNOSE] Received response from Gemini.`);
+  console.log(`[DIAGNOSE] Calling Gemini via router...`);
+  const routerResult = await callGemini(prompt);
+  
+  if (!routerResult.success) {
+    throw new Error(`Diagnose agent failed: ${routerResult.error}`);
+  }
+  
+  let text = routerResult.data;
+  console.log(`[DIAGNOSE] Received response from Gemini (Model: ${routerResult.model_used}).`);
 
   // Strip markdown code fences if present
   text = text.replace(/```json/g, '').replace(/```/g, '').trim();

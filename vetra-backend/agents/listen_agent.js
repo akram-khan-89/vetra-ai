@@ -1,12 +1,8 @@
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+const { callGemini } = require('../utils/gemini_router');
 require('dotenv').config();
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 async function listenAgent(text) {
   console.log(`[LISTEN] Starting analysis for input: "${text}"`);
-  
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-lite' });
   
   const prompt = `
     You are an expert AI veterinary triage assistant in Pakistan. Your job is to listen to a farmer describing their animal's health issues and perform clinical intake and enrichment. You do NOT diagnose diseases.
@@ -38,11 +34,15 @@ async function listenAgent(text) {
     7. **Constraints**: Do NOT hallucinate or predict any disease names in this layer.
   `;
   
-  console.log(`[LISTEN] Calling Gemini API...`);
-  const result = await model.generateContent(prompt);
-  let responseText = result.response.text();
+  console.log(`[LISTEN] Calling Gemini via router...`);
+  const routerResult = await callGemini(prompt);
   
-  console.log(`[LISTEN] Received response from Gemini.`);
+  if (!routerResult.success) {
+    throw new Error(`Listen agent failed: ${routerResult.error}`);
+  }
+  
+  let responseText = routerResult.data;
+  console.log(`[LISTEN] Received response from Gemini (Model: ${routerResult.model_used}).`);
   
   // Clean up if Gemini adds markdown code blocks
   responseText = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
