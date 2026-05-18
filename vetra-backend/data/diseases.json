@@ -1,0 +1,905 @@
+{
+  "diseases": [
+    {
+      "id": "bovine_pneumonia",
+      "name": "Bovine Pneumonia",
+      "urdu_name": "گائے / بھینس کو پھیپھڑوں کی سوزش",
+      "animal_types": ["cattle", "buffalo"],
+      "key_symptoms": ["fever", "cough", "nasal_discharge", "lethargy", "rapid_breathing"],
+      "visual_signs": ["yellow_discharge", "eye_redness", "nostril_flare"],
+      "complexity_level": 2,
+      "urgency": "same_day",
+      "risk_score": 8,
+      "vet_required": true,
+      "required_specialization": "dairy_cattle",
+      "home_care": ["paracetamol", "isolation", "electrolyte_water", "keep_warm"],
+      "treatment": "antibiotics - amoxicillin or tetracycline",
+      "symptom_match_weights": {
+        "fever": 25, "cough": 20, "nasal_discharge": 20,
+        "lethargy": 15, "rapid_breathing": 20
+      }
+    },
+    {
+      "id": "mastitis",
+      "name": "Mastitis",
+      "urdu_name": "تھن کی سوزش",
+      "animal_types": ["cattle", "buffalo"],
+      "key_symptoms": ["udder_swelling", "milk_change", "udder_pain", "fever"],
+      "visual_signs": ["red_udder", "swollen_teat", "abnormal_milk"],
+      "complexity_level": 2,
+      "urgency": "same_day",
+      "risk_score": 7,
+      "vet_required": true,
+      "required_specialization": "dairy_cattle",
+      "home_care": ["cold_compress", "frequent_milking", "isolate"],
+      "treatment": "intramammary antibiotics + anti-inflammatory",
+      "symptom_match_weights": {
+        "udder_swelling": 35, "milk_change": 30, "udder_pain": 25, "fever": 10
+      }
+    },
+    {
+      "id": "foot_abscess",
+      "name": "Foot Abscess",
+      "urdu_name": "کھر کا پھوڑا",
+      "animal_types": ["cattle", "buffalo", "goat", "sheep"],
+      "key_symptoms": ["lameness", "foot_swelling", "limping", "foot_discharge"],
+      "visual_signs": ["swollen_hoof", "redness_between_toes", "pus"],
+      "complexity_level": 1,
+      "urgency": "next_day",
+      "risk_score": 5,
+      "vet_required": true,
+      "required_specialization": "general",
+      "home_care": ["hoof_cleaning", "iodine_wash", "keep_dry"],
+      "treatment": "drainage + antibiotics + hoof bandage",
+      "symptom_match_weights": {
+        "lameness": 35, "foot_swelling": 30, "limping": 25, "foot_discharge": 10
+      }
+    },
+    {
+      "id": "fmd",
+      "name": "Foot and Mouth Disease (FMD)",
+      "urdu_name": "منہ کھر کی بیماری",
+      "animal_types": ["cattle", "buffalo", "goat", "sheep"],
+      "key_symptoms": ["oral_blisters", "lameness", "fever", "drooling", "reduced_appetite"],
+      "visual_signs": ["mouth_ulcers", "blisters_on_feet", "excessive_saliva"],
+      "complexity_level": 3,
+      "urgency": "immediate",
+      "risk_score": 10,
+      "vet_required": true,
+      "required_specialization": "dairy_cattle",
+      "home_care": ["strict_isolation", "mouth_cleaning", "soft_food"],
+      "treatment": "supportive care - no specific cure - report to livestock department",
+      "symptom_match_weights": {
+        "oral_blisters": 30, "lameness": 20, "fever": 15, "drooling": 25, "reduced_appetite": 10
+      }
+    },
+    {
+      "id": "milk_fever",
+      "name": "Milk Fever (Hypocalcaemia)",
+      "urdu_name": "دودھ کا بخار",
+      "animal_types": ["cattle", "buffalo"],
+      "key_symptoms": ["weakness", "inability_to_stand", "cold_extremities", "recently_calved"],
+      "visual_signs": ["muscle_tremors", "neck_bend", "glazed_eyes"],
+      "complexity_level": 3,
+      "urgency": "immediate",
+      "risk_score": 9,
+      "vet_required": true,
+      "required_specialization": "dairy_cattle",
+      "home_care": ["keep_warm", "do_not_force_stand"],
+      "treatment": "IV calcium borogluconate - emergency",
+      "symptom_match_weights": {
+        "weakness": 20, "inability_to_stand": 35, "cold_extremities": 25, "recently_calved": 20
+      }
+    },
+    {
+      "id": "bloat",
+      "name": "Bloat (Ruminal Tympany)",
+      "urdu_name": "پیٹ پھولنا",
+      "animal_types": ["cattle", "buffalo", "goat"],
+      "key_symptoms": ["distended_abdomen", "discomfort", "kicking_belly", "difficulty_breathing"],
+      "visual_signs": ["swollen_left_flank", "animal_in_distress"],
+      "complexity_level": 2,
+      "urgency": "immediate",
+      "risk_score": 8,
+      "vet_required": true,
+      "required_specialization": "general",
+      "home_care": ["walk_animal", "no_water_for_now", "massage_flank"],
+      "treatment": "stomach tube or trocar - vet procedure",
+      "symptom_match_weights": {
+        "distended_abdomen": 40, "discomfort": 20, "kicking_belly": 25, "difficulty_breathing": 15
+      }
+    },
+    {
+      "id": "ppr",
+      "name": "PPR (Goat Plague)",
+      "urdu_name": "بکری کا طاعون",
+      "animal_types": ["goat", "sheep"],
+      "key_symptoms": ["high_fever", "nasal_discharge", "cough", "diarrhea", "mouth_sores"],
+      "visual_signs": ["crusty_nose", "watery_eyes", "mouth_ulcers"],
+      "complexity_level": 3,
+      "urgency": "immediate",
+      "risk_score": 10,
+      "vet_required": true,
+      "required_specialization": "small_ruminants",
+      "home_care": ["strict_isolation", "supportive_feeding"],
+      "treatment": "no cure - supportive care + report to authorities",
+      "symptom_match_weights": {
+        "high_fever": 20, "nasal_discharge": 20, "cough": 15, "diarrhea": 20, "mouth_sores": 25
+      }
+    },
+    {
+      "id": "dehydration",
+      "name": "Dehydration",
+      "urdu_name": "پانی کی کمی",
+      "animal_types": ["cattle", "buffalo", "goat", "sheep"],
+      "key_symptoms": ["sunken_eyes", "dry_nose", "skin_tent_test", "weakness", "not_drinking"],
+      "visual_signs": ["sunken_eyes", "dry_cracked_nose"],
+      "complexity_level": 1,
+      "urgency": "same_day",
+      "risk_score": 6,
+      "vet_required": false,
+      "required_specialization": "general",
+      "home_care": ["ORS_solution", "encourage_drinking", "electrolytes"],
+      "treatment": "oral or IV fluids - vet needed if severe",
+      "symptom_match_weights": {
+        "sunken_eyes": 30, "dry_nose": 15, "weakness": 25, "not_drinking": 30
+      }
+    },
+    {
+      "id": "worms",
+      "name": "Internal Parasites (Worms)",
+      "urdu_name": "پیٹ کے کیڑے",
+      "animal_types": ["cattle", "buffalo", "goat", "sheep"],
+      "key_symptoms": ["weight_loss", "diarrhea", "pot_belly", "weakness", "pale_gums"],
+      "visual_signs": ["thin_body", "rough_coat", "pale_inner_eyelid"],
+      "complexity_level": 1,
+      "urgency": "routine",
+      "risk_score": 4,
+      "vet_required": false,
+      "required_specialization": "general",
+      "home_care": ["deworming_tablet_available_at_pharmacy"],
+      "treatment": "albendazole or ivermectin deworming",
+      "symptom_match_weights": {
+        "weight_loss": 25, "diarrhea": 20, "pot_belly": 25, "weakness": 15, "pale_gums": 15
+      }
+    },
+    {
+      "id": "heat_stress",
+      "name": "Heat Stress",
+      "urdu_name": "گرمی کا اثر",
+      "animal_types": ["cattle", "buffalo"],
+      "key_symptoms": ["excessive_panting", "reduced_milk", "not_eating", "seeking_shade"],
+      "visual_signs": ["heavy_breathing", "drooling", "standing_in_water"],
+      "complexity_level": 1,
+      "urgency": "same_day",
+      "risk_score": 5,
+      "vet_required": false,
+      "required_specialization": "general",
+      "home_care": ["shade", "cool_water", "fan", "wetting_body"],
+      "treatment": "cooling measures + electrolytes",
+      "symptom_match_weights": {
+        "excessive_panting": 35, "reduced_milk": 20, "not_eating": 25, "seeking_shade": 20
+      }
+    },
+    {
+      "id": "anthrax",
+      "name": "Anthrax",
+      "urdu_name": "انتھراکس (گھٹیا)",
+      "animal_types": ["cattle", "buffalo", "goat", "sheep"],
+      "key_symptoms": ["sudden_death", "bleeding_from_openings", "high_fever", "tremors"],
+      "visual_signs": ["dark_blood_from_nose", "bloated_carcass"],
+      "complexity_level": 3,
+      "urgency": "immediate",
+      "risk_score": 10,
+      "vet_required": true,
+      "required_specialization": "large_animal_expert",
+      "home_care": ["do_not_touch_without_gloves", "isolate_body", "do_not_open_carcass"],
+      "treatment": "penicillin if caught early, highly fatal",
+      "symptom_match_weights": {
+        "sudden_death": 40, "bleeding_from_openings": 40, "high_fever": 10, "tremors": 10
+      }
+    },
+    {
+      "id": "blackquarter",
+      "name": "Blackquarter (Blackleg)",
+      "urdu_name": "چوڑا مار (بلیک کوارٹر)",
+      "animal_types": ["cattle", "buffalo"],
+      "key_symptoms": ["lameness", "swelling_in_muscles", "fever", "loss_of_appetite"],
+      "visual_signs": ["spongy_swelling", "crepitating_sound_on_pressing"],
+      "complexity_level": 3,
+      "urgency": "immediate",
+      "risk_score": 9,
+      "vet_required": true,
+      "required_specialization": "large_animal_expert",
+      "home_care": ["isolate", "rest"],
+      "treatment": "high dose penicillin, vaccination for prevention",
+      "symptom_match_weights": {
+        "lameness": 20, "swelling_in_muscles": 40, "fever": 20, "loss_of_appetite": 20
+      }
+    },
+    {
+      "id": "haemorrhagic_septicaemia",
+      "name": "Haemorrhagic Septicaemia (HS)",
+      "urdu_name": "گل گھوٹو",
+      "animal_types": ["cattle", "buffalo"],
+      "key_symptoms": ["high_fever", "respiratory_distress", "swelling_under_jaw", "salivation"],
+      "visual_signs": ["swollen_neck", "drooling", "open_mouth_breathing"],
+      "complexity_level": 3,
+      "urgency": "immediate",
+      "risk_score": 10,
+      "vet_required": true,
+      "required_specialization": "large_animal_expert",
+      "home_care": ["immediate_isolation"],
+      "treatment": "antibiotics (sulphonamides) if early, vaccination is key",
+      "symptom_match_weights": {
+        "high_fever": 20, "respiratory_distress": 30, "swelling_under_jaw": 30, "salivation": 20
+      }
+    },
+    {
+      "id": "rabies",
+      "name": "Rabies",
+      "urdu_name": "ہڑک (ریبیج)",
+      "animal_types": ["cattle", "buffalo", "goat", "sheep", "dog"],
+      "key_symptoms": ["behavioral_change", "salivation", "aggressiveness", "paralysis"],
+      "visual_signs": ["frothing_at_mouth", "unsteady_gait", "abnormal_bellowing"],
+      "complexity_level": 3,
+      "urgency": "immediate",
+      "risk_score": 10,
+      "vet_required": true,
+      "required_specialization": "general",
+      "home_care": ["do_not_approach", "quarantine"],
+      "treatment": "incurable, report to authorities",
+      "symptom_match_weights": {
+        "behavioral_change": 30, "salivation": 20, "aggressiveness": 30, "paralysis": 20
+      }
+    },
+    {
+      "id": "brucellosis",
+      "name": "Brucellosis",
+      "urdu_name": "بروسیلوسس (اسقاط حمل)",
+      "animal_types": ["cattle", "buffalo", "goat", "sheep"],
+      "key_symptoms": ["abortion", "retained_placenta", "reduced_milk", "infertility"],
+      "visual_signs": ["aborted_fetus", "placenta_not_passed"],
+      "complexity_level": 3,
+      "urgency": "next_day",
+      "risk_score": 8,
+      "vet_required": true,
+      "required_specialization": "reproductive",
+      "home_care": ["use_gloves_when_handling", "isolate_aborted_animal", "dispose_fetus_safely"],
+      "treatment": "no effective treatment, culling recommended",
+      "symptom_match_weights": {
+        "abortion": 50, "retained_placenta": 20, "reduced_milk": 10, "infertility": 20
+      }
+    },
+    {
+      "id": "tetanus",
+      "name": "Tetanus",
+      "urdu_name": "تشنج (ٹائٹنس)",
+      "animal_types": ["cattle", "buffalo", "goat", "sheep", "horse"],
+      "key_symptoms": ["muscle_stiffness", "lockjaw", "spasms", "difficulty_walking"],
+      "visual_signs": ["stiff_legs", "raised_tail", "third_eyelid_visible"],
+      "complexity_level": 3,
+      "urgency": "immediate",
+      "risk_score": 9,
+      "vet_required": true,
+      "required_specialization": "large_animal_expert",
+      "home_care": ["keep_in_dark_quiet_place", "soft_bedding"],
+      "treatment": "tetanus antitoxin, penicillin, muscle relaxants",
+      "symptom_match_weights": {
+        "muscle_stiffness": 30, "lockjaw": 30, "spasms": 20, "difficulty_walking": 20
+      }
+    },
+    {
+      "id": "lumpy_skin_disease",
+      "name": "Lumpy Skin Disease (LSD)",
+      "urdu_name": "لمپی سکن (جلد کی گانٹھوں کی بیماری)",
+      "animal_types": ["cattle", "buffalo"],
+      "key_symptoms": ["skin_nodules", "fever", "swollen_lymph_nodes", "watery_eyes", "nasal_discharge"],
+      "visual_signs": ["lumps_on_skin", "swollen_legs", "drooling"],
+      "complexity_level": 3,
+      "urgency": "immediate",
+      "risk_score": 8,
+      "vet_required": true,
+      "required_specialization": "large_animal_expert",
+      "home_care": ["fly_control", "soft_food", "wound_care"],
+      "treatment": "symptomatic treatment, antibiotics for secondary infection",
+      "symptom_match_weights": {
+        "skin_nodules": 50, "fever": 15, "swollen_lymph_nodes": 15, "watery_eyes": 10, "nasal_discharge": 10
+      }
+    },
+    {
+      "id": "tick_fever",
+      "name": "Tick Fever (Babesiosis)",
+      "urdu_name": "چچڑیوں کا بخار",
+      "animal_types": ["cattle", "buffalo"],
+      "key_symptoms": ["high_fever", "red_urine", "anemia", "jaundice", "weakness"],
+      "visual_signs": ["ticks_present", "coffee_colored_urine", "pale_gums"],
+      "complexity_level": 2,
+      "urgency": "immediate",
+      "risk_score": 8,
+      "vet_required": true,
+      "required_specialization": "large_animal_expert",
+      "home_care": ["tick_removal", "rest"],
+      "treatment": "imidocarb or diminazene aceturate",
+      "symptom_match_weights": {
+        "high_fever": 20, "red_urine": 40, "anemia": 20, "jaundice": 10, "weakness": 10
+      }
+    },
+    {
+      "id": "coccidiosis",
+      "name": "Coccidiosis",
+      "urdu_name": "خونی پیچش (کوکسی ڈیوسس)",
+      "animal_types": ["cattle", "buffalo", "goat", "sheep", "poultry"],
+      "key_symptoms": ["bloody_diarrhea", "straining", "weakness", "loss_of_appetite", "dehydration"],
+      "visual_signs": ["blood_in_stool", "soiled_hindquarters", "sunken_eyes"],
+      "complexity_level": 2,
+      "urgency": "same_day",
+      "risk_score": 7,
+      "vet_required": true,
+      "required_specialization": "general",
+      "home_care": ["isolate", "fluids", "clean_environment"],
+      "treatment": "amprolium or sulfa drugs",
+      "symptom_match_weights": {
+        "bloody_diarrhea": 40, "straining": 20, "weakness": 15, "loss_of_appetite": 10, "dehydration": 15
+      }
+    },
+    {
+      "id": "fascioliasis",
+      "name": "Fascioliasis (Liver Fluke)",
+      "urdu_name": "جگر کے کیڑے",
+      "animal_types": ["cattle", "buffalo", "goat", "sheep"],
+      "key_symptoms": ["bottle_jaw", "weight_loss", "anemia", "diarrhea"],
+      "visual_signs": ["swelling_under_jaw", "pale_membranes", "poor_coat"],
+      "complexity_level": 2,
+      "urgency": "next_day",
+      "risk_score": 6,
+      "vet_required": false,
+      "required_specialization": "general",
+      "home_care": ["keep_away_from_marshy_areas"],
+      "treatment": "triclabendazole or closantel",
+      "symptom_match_weights": {
+        "bottle_jaw": 40, "weight_loss": 20, "anemia": 20, "diarrhea": 20
+      }
+    },
+    {
+      "id": "ringworm",
+      "name": "Ringworm",
+      "urdu_name": "داد (رنگ ورم)",
+      "animal_types": ["cattle", "buffalo", "goat", "sheep"],
+      "key_symptoms": ["hair_loss", "crusty_lesions", "itching", "circular_patches"],
+      "visual_signs": ["grey_white_crusts", "circular_hairless_areas"],
+      "complexity_level": 1,
+      "urgency": "routine",
+      "risk_score": 3,
+      "vet_required": false,
+      "required_specialization": "dermatology",
+      "home_care": ["isolate", "sunlight", "iodine_application"],
+      "treatment": "topical antifungals (iodine, clotrimazole)",
+      "symptom_match_weights": {
+        "hair_loss": 20, "crusty_lesions": 30, "itching": 10, "circular_patches": 40
+      }
+    },
+    {
+      "id": "mange",
+      "name": "Mange",
+      "urdu_name": "خارش (مینج)",
+      "animal_types": ["cattle", "buffalo", "goat", "sheep"],
+      "key_symptoms": ["severe_itching", "hair_loss", "thick_skin", "restlessness"],
+      "visual_signs": ["scabs", "wrinkled_thick_skin", "scratching_against_objects"],
+      "complexity_level": 1,
+      "urgency": "next_day",
+      "risk_score": 4,
+      "vet_required": false,
+      "required_specialization": "dermatology",
+      "home_care": ["isolate", "clean_bedding"],
+      "treatment": "ivermectin injection or topical acaricides",
+      "symptom_match_weights": {
+        "severe_itching": 40, "hair_loss": 20, "thick_skin": 20, "restlessness": 20
+      }
+    },
+    {
+      "id": "tick_infestation",
+      "name": "Tick Infestation",
+      "urdu_name": "چچڑیوں کا حملہ",
+      "animal_types": ["cattle", "buffalo", "goat", "sheep"],
+      "key_symptoms": ["visible_ticks", "itching", "anemia", "restlessness"],
+      "visual_signs": ["ticks_on_body", "scratching", "pale_gums"],
+      "complexity_level": 1,
+      "urgency": "routine",
+      "risk_score": 3,
+      "vet_required": false,
+      "required_specialization": "general",
+      "home_care": ["manual_removal_if_few", "clean_surroundings"],
+      "treatment": "cypermethrin spray, pour-on treatments, ivermectin",
+      "symptom_match_weights": {
+        "visible_ticks": 50, "itching": 20, "anemia": 20, "restlessness": 10
+      }
+    },
+    {
+      "id": "pink_eye",
+      "name": "Pink Eye (Infectious Keratoconjunctivitis)",
+      "urdu_name": "آنکھ کی سوزش (پنک آئی)",
+      "animal_types": ["cattle", "buffalo", "goat", "sheep"],
+      "key_symptoms": ["watery_eyes", "redness", "squinting", "cloudy_eye"],
+      "visual_signs": ["excessive_tearing", "white_spot_on_eye", "avoiding_light"],
+      "complexity_level": 1,
+      "urgency": "next_day",
+      "risk_score": 4,
+      "vet_required": false,
+      "required_specialization": "general",
+      "home_care": ["keep_in_shade", "fly_control", "eye_wash"],
+      "treatment": "antibiotic eye drops/ointment, systemic antibiotics if severe",
+      "symptom_match_weights": {
+        "watery_eyes": 30, "redness": 30, "squinting": 20, "cloudy_eye": 20
+      }
+    },
+    {
+      "id": "actinomycosis",
+      "name": "Actinomycosis (Lumpy Jaw)",
+      "urdu_name": "جبڑے کی گانٹھ (لمپی جا)",
+      "animal_types": ["cattle", "buffalo"],
+      "key_symptoms": ["hard_swelling_on_jaw", "difficulty_chewing", "weight_loss"],
+      "visual_signs": ["bony_lump_on_jaw", "drooling", "pus_from_lump"],
+      "complexity_level": 2,
+      "urgency": "next_day",
+      "risk_score": 5,
+      "vet_required": true,
+      "required_specialization": "large_animal_expert",
+      "home_care": ["soft_food", "isolate_if_discharging"],
+      "treatment": "iodine therapy (sodium iodide IV), antibiotics",
+      "symptom_match_weights": {
+        "hard_swelling_on_jaw": 60, "difficulty_chewing": 20, "weight_loss": 20
+      }
+    },
+    {
+      "id": "actinobacillosis",
+      "name": "Actinobacillosis (Wooden Tongue)",
+      "urdu_name": "لکڑی نما زبان (وڈن ٹنگ)",
+      "animal_types": ["cattle", "buffalo"],
+      "key_symptoms": ["swollen_tongue", "drooling", "difficulty_eating", "swollen_lymph_nodes"],
+      "visual_signs": ["tongue_protruding", "hard_tongue", "salivation"],
+      "complexity_level": 2,
+      "urgency": "immediate",
+      "risk_score": 6,
+      "vet_required": true,
+      "required_specialization": "large_animal_expert",
+      "home_care": ["soft_food_or_fluids"],
+      "treatment": "sodium iodide IV, broad-spectrum antibiotics",
+      "symptom_match_weights": {
+        "swollen_tongue": 40, "drooling": 20, "difficulty_eating": 20, "swollen_lymph_nodes": 20
+      }
+    },
+    {
+      "id": "enterotoxemia",
+      "name": "Enterotoxemia (Pulpy Kidney)",
+      "urdu_name": "انتڑیوں کا زہر",
+      "animal_types": ["goat", "sheep", "cattle"],
+      "key_symptoms": ["sudden_death", "convulsions", "diarrhea", "abdominal_pain"],
+      "visual_signs": ["kicking_at_belly", "frothing", "stargazing_posture"],
+      "complexity_level": 3,
+      "urgency": "immediate",
+      "risk_score": 9,
+      "vet_required": true,
+      "required_specialization": "general",
+      "home_care": ["remove_concentrate_feed"],
+      "treatment": "antitoxin if early, usually fatal; vaccination is prevention",
+      "symptom_match_weights": {
+        "sudden_death": 30, "convulsions": 30, "diarrhea": 20, "abdominal_pain": 20
+      }
+    },
+    {
+      "id": "sheep_pox",
+      "name": "Sheep Pox",
+      "urdu_name": "بھیڑوں کی چیچک",
+      "animal_types": ["sheep"],
+      "key_symptoms": ["fever", "skin_nodules", "nasal_discharge", "respiratory_distress"],
+      "visual_signs": ["lesions_on_face", "lesions_on_udder", "scabs"],
+      "complexity_level": 3,
+      "urgency": "immediate",
+      "risk_score": 8,
+      "vet_required": true,
+      "required_specialization": "small_ruminants",
+      "home_care": ["isolation", "soft_food", "fly_control"],
+      "treatment": "symptomatic, antibiotics for secondary infections",
+      "symptom_match_weights": {
+        "fever": 20, "skin_nodules": 40, "nasal_discharge": 20, "respiratory_distress": 20
+      }
+    },
+    {
+      "id": "goat_pox",
+      "name": "Goat Pox",
+      "urdu_name": "بکریوں کی چیچک",
+      "animal_types": ["goat"],
+      "key_symptoms": ["fever", "skin_lesions", "swollen_lymph_nodes", "eye_discharge"],
+      "visual_signs": ["pox_lesions_on_hairless_areas", "scabs", "tearing"],
+      "complexity_level": 3,
+      "urgency": "immediate",
+      "risk_score": 8,
+      "vet_required": true,
+      "required_specialization": "small_ruminants",
+      "home_care": ["isolation", "soft_food", "wound_care"],
+      "treatment": "supportive care, antibiotics to prevent secondary infection",
+      "symptom_match_weights": {
+        "fever": 20, "skin_lesions": 40, "swollen_lymph_nodes": 20, "eye_discharge": 20
+      }
+    },
+    {
+      "id": "orf",
+      "name": "Orf (Contagious Ecthyma)",
+      "urdu_name": "منہ کے چھالے (اورف)",
+      "animal_types": ["goat", "sheep"],
+      "key_symptoms": ["scabs_on_lips", "sore_mouth", "reluctance_to_eat", "lesions_on_teats"],
+      "visual_signs": ["crusty_sores_on_muzzle", "bleeding_scabs"],
+      "complexity_level": 1,
+      "urgency": "next_day",
+      "risk_score": 4,
+      "vet_required": false,
+      "required_specialization": "general",
+      "home_care": ["soft_leaves", "bottle_feed_kids", "wear_gloves"],
+      "treatment": "antiseptic spray (iodine), self-limiting",
+      "symptom_match_weights": {
+        "scabs_on_lips": 40, "sore_mouth": 20, "reluctance_to_eat": 20, "lesions_on_teats": 20
+      }
+    },
+    {
+      "id": "ketosis",
+      "name": "Ketosis",
+      "urdu_name": "کیٹوسس (توانائی کی کمی)",
+      "animal_types": ["cattle", "buffalo", "sheep"],
+      "key_symptoms": ["reduced_milk", "loss_of_appetite", "sweet_smelling_breath", "nervous_signs"],
+      "visual_signs": ["weight_loss", "licking_objects", "staggering"],
+      "complexity_level": 2,
+      "urgency": "same_day",
+      "risk_score": 6,
+      "vet_required": true,
+      "required_specialization": "dairy_cattle",
+      "home_care": ["offer_molasses", "high_energy_feed"],
+      "treatment": "IV glucose, oral propylene glycol",
+      "symptom_match_weights": {
+        "reduced_milk": 30, "loss_of_appetite": 30, "sweet_smelling_breath": 20, "nervous_signs": 20
+      }
+    },
+    {
+      "id": "retained_placenta",
+      "name": "Retained Placenta",
+      "urdu_name": "جیر کا رک جانا",
+      "animal_types": ["cattle", "buffalo", "goat", "sheep"],
+      "key_symptoms": ["placenta_visible_after_12h", "fever", "foul_discharge", "reduced_appetite"],
+      "visual_signs": ["membranes_hanging_from_vulva", "smelly_discharge"],
+      "complexity_level": 2,
+      "urgency": "same_day",
+      "risk_score": 6,
+      "vet_required": true,
+      "required_specialization": "reproductive",
+      "home_care": ["do_not_pull_membranes", "monitor_temperature"],
+      "treatment": "antibiotics, hormones (oxytocin/PGF2a), manual removal by vet",
+      "symptom_match_weights": {
+        "placenta_visible_after_12h": 50, "fever": 15, "foul_discharge": 20, "reduced_appetite": 15
+      }
+    },
+    {
+      "id": "uterine_prolapse",
+      "name": "Uterine Prolapse",
+      "urdu_name": "بچہ دانی کا باہر آنا",
+      "animal_types": ["cattle", "buffalo", "goat", "sheep"],
+      "key_symptoms": ["uterus_outside_body", "straining", "shock", "bleeding"],
+      "visual_signs": ["large_red_mass_from_vulva"],
+      "complexity_level": 3,
+      "urgency": "immediate",
+      "risk_score": 10,
+      "vet_required": true,
+      "required_specialization": "reproductive",
+      "home_care": ["keep_clean_and_moist", "wrap_in_wet_towel", "keep_animal_calm"],
+      "treatment": "epidural, cleaning, and repositioning by vet",
+      "symptom_match_weights": {
+        "uterus_outside_body": 70, "straining": 10, "shock": 10, "bleeding": 10
+      }
+    },
+    {
+      "id": "dystocia",
+      "name": "Dystocia (Difficult Birth)",
+      "urdu_name": "پیدائش میں مشکل",
+      "animal_types": ["cattle", "buffalo", "goat", "sheep"],
+      "key_symptoms": ["prolonged_labor", "straining_without_progress", "fetal_parts_visible", "exhaustion"],
+      "visual_signs": ["only_one_leg_visible", "head_visible_but_stuck", "weakness"],
+      "complexity_level": 3,
+      "urgency": "immediate",
+      "risk_score": 9,
+      "vet_required": true,
+      "required_specialization": "reproductive",
+      "home_care": ["do_not_pull_blindly", "lubricate_with_clean_soap"],
+      "treatment": "veterinary assistance, mutation, traction, or C-section",
+      "symptom_match_weights": {
+        "prolonged_labor": 40, "straining_without_progress": 30, "fetal_parts_visible": 20, "exhaustion": 10
+      }
+    },
+    {
+      "id": "calf_scours",
+      "name": "Calf Scours (Diarrhea)",
+      "urdu_name": "بچھڑوں کے دست",
+      "animal_types": ["cattle", "buffalo"],
+      "key_symptoms": ["watery_diarrhea", "dehydration", "weakness", "sunken_eyes", "cold_extremities"],
+      "visual_signs": ["soiled_tail", "inability_to_stand", "sunken_eyes"],
+      "complexity_level": 2,
+      "urgency": "immediate",
+      "risk_score": 8,
+      "vet_required": true,
+      "required_specialization": "general",
+      "home_care": ["stop_milk", "oral_electrolytes", "keep_warm"],
+      "treatment": "fluids (oral or IV), antibiotics if bacterial",
+      "symptom_match_weights": {
+        "watery_diarrhea": 30, "dehydration": 20, "weakness": 20, "sunken_eyes": 15, "cold_extremities": 15
+      }
+    },
+    {
+      "id": "navel_ill",
+      "name": "Navel Ill (Joint Ill)",
+      "urdu_name": "ناف کا انفیکشن",
+      "animal_types": ["cattle", "buffalo", "goat", "sheep"],
+      "key_symptoms": ["swollen_navel", "fever", "swollen_joints", "lameness", "lethargy"],
+      "visual_signs": ["pus_from_navel", "hot_swollen_joints", "reluctance_to_move"],
+      "complexity_level": 2,
+      "urgency": "same_day",
+      "risk_score": 7,
+      "vet_required": true,
+      "required_specialization": "general",
+      "home_care": ["clean_navel_with_iodine", "soft_bedding"],
+      "treatment": "antibiotics (penicillin or amoxicillin), joint flushing",
+      "symptom_match_weights": {
+        "swollen_navel": 30, "fever": 15, "swollen_joints": 25, "lameness": 15, "lethargy": 15
+      }
+    },
+    {
+      "id": "acidosis",
+      "name": "Acidosis (Grain Overload)",
+      "urdu_name": "تیزابیت (زیادہ دلیہ کھانا)",
+      "animal_types": ["cattle", "buffalo", "goat", "sheep"],
+      "key_symptoms": ["distended_abdomen", "diarrhea", "staggering", "dehydration", "loss_of_appetite"],
+      "visual_signs": ["watery_sour_smelling_stool", "lying_down", "weakness"],
+      "complexity_level": 3,
+      "urgency": "immediate",
+      "risk_score": 9,
+      "vet_required": true,
+      "required_specialization": "general",
+      "home_care": ["remove_grain", "offer_hay", "baking_soda_in_water"],
+      "treatment": "oral antacids (sodium bicarbonate), IV fluids, thiamine",
+      "symptom_match_weights": {
+        "distended_abdomen": 20, "diarrhea": 20, "staggering": 20, "dehydration": 20, "loss_of_appetite": 20
+      }
+    },
+    {
+      "id": "hardware_disease",
+      "name": "Hardware Disease",
+      "urdu_name": "معدے میں لوہا جانا",
+      "animal_types": ["cattle", "buffalo"],
+      "key_symptoms": ["sudden_drop_in_milk", "arched_back", "reluctance_to_move", "grunting"],
+      "visual_signs": ["walking_carefully", "groaning_when_getting_up"],
+      "complexity_level": 3,
+      "urgency": "same_day",
+      "risk_score": 8,
+      "vet_required": true,
+      "required_specialization": "large_animal_expert",
+      "home_care": ["confine_animal", "elevate_front_legs"],
+      "treatment": "magnet administration, antibiotics, surgery if severe",
+      "symptom_match_weights": {
+        "sudden_drop_in_milk": 25, "arched_back": 30, "reluctance_to_move": 25, "grunting": 20
+      }
+    },
+    {
+      "id": "johne_disease",
+      "name": "Johne's Disease",
+      "urdu_name": "جوہنز بیماری (پرانی پیچش)",
+      "animal_types": ["cattle", "buffalo", "goat", "sheep"],
+      "key_symptoms": ["chronic_diarrhea", "severe_weight_loss", "normal_appetite", "bottle_jaw"],
+      "visual_signs": ["skeleton_like_appearance", "watery_faeces", "swelling_under_jaw"],
+      "complexity_level": 3,
+      "urgency": "routine",
+      "risk_score": 7,
+      "vet_required": true,
+      "required_specialization": "large_animal_expert",
+      "home_care": ["isolate", "improve_nutrition"],
+      "treatment": "no cure, cull affected animals",
+      "symptom_match_weights": {
+        "chronic_diarrhea": 40, "severe_weight_loss": 30, "normal_appetite": 15, "bottle_jaw": 15
+      }
+    },
+    {
+      "id": "theileriosis",
+      "name": "Theileriosis",
+      "urdu_name": "تھیلیریاسس (چچڑیوں کی بیماری)",
+      "animal_types": ["cattle", "buffalo"],
+      "key_symptoms": ["high_fever", "swollen_lymph_nodes", "anemia", "weakness", "eye_discharge"],
+      "visual_signs": ["ticks_present", "enlarged_glands", "pale_gums", "tearing"],
+      "complexity_level": 3,
+      "urgency": "immediate",
+      "risk_score": 9,
+      "vet_required": true,
+      "required_specialization": "large_animal_expert",
+      "home_care": ["tick_control", "rest", "shade"],
+      "treatment": "buparvaquone injection, supportive therapy",
+      "symptom_match_weights": {
+        "high_fever": 20, "swollen_lymph_nodes": 30, "anemia": 20, "weakness": 15, "eye_discharge": 15
+      }
+    },
+    {
+      "id": "anaplasmosis",
+      "name": "Anaplasmosis",
+      "urdu_name": "اناپلازموسس",
+      "animal_types": ["cattle", "buffalo"],
+      "key_symptoms": ["fever", "jaundice", "anemia", "constipation", "weakness"],
+      "visual_signs": ["yellow_eyes", "pale_gums", "dry_dung"],
+      "complexity_level": 2,
+      "urgency": "immediate",
+      "risk_score": 8,
+      "vet_required": true,
+      "required_specialization": "large_animal_expert",
+      "home_care": ["tick_control", "fly_control", "do_not_stress"],
+      "treatment": "tetracycline antibiotics, blood transfusion if severe",
+      "symptom_match_weights": {
+        "fever": 20, "jaundice": 30, "anemia": 20, "constipation": 15, "weakness": 15
+      }
+    },
+    {
+      "id": "trypanosomiasis",
+      "name": "Trypanosomiasis (Surra)",
+      "urdu_name": "سرا",
+      "animal_types": ["cattle", "buffalo", "horse", "camel"],
+      "key_symptoms": ["intermittent_fever", "weight_loss", "anemia", "circling", "edema"],
+      "visual_signs": ["fly_bites", "swelling_on_legs", "pale_membranes", "staggering"],
+      "complexity_level": 3,
+      "urgency": "same_day",
+      "risk_score": 8,
+      "vet_required": true,
+      "required_specialization": "large_animal_expert",
+      "home_care": ["fly_control", "good_nutrition"],
+      "treatment": "diminazene aceturate, quinapyramine",
+      "symptom_match_weights": {
+        "intermittent_fever": 25, "weight_loss": 20, "anemia": 20, "circling": 15, "edema": 20
+      }
+    },
+    {
+      "id": "lice_infestation",
+      "name": "Lice Infestation",
+      "urdu_name": "جوؤں کا حملہ",
+      "animal_types": ["cattle", "buffalo", "goat", "sheep"],
+      "key_symptoms": ["itching", "hair_loss", "rough_coat", "restlessness"],
+      "visual_signs": ["rubbing_against_walls", "visible_lice", "poor_condition"],
+      "complexity_level": 1,
+      "urgency": "routine",
+      "risk_score": 2,
+      "vet_required": false,
+      "required_specialization": "general",
+      "home_care": ["isolate", "sunlight"],
+      "treatment": "pour-on insecticides, injectable ivermectin",
+      "symptom_match_weights": {
+        "itching": 40, "hair_loss": 20, "rough_coat": 20, "restlessness": 20
+      }
+    },
+    {
+      "id": "cbpp",
+      "name": "Contagious Bovine Pleuropneumonia (CBPP)",
+      "urdu_name": "گائے کی متعدی نمونیا",
+      "animal_types": ["cattle"],
+      "key_symptoms": ["fever", "coughing", "difficulty_breathing", "nasal_discharge"],
+      "visual_signs": ["extended_neck", "elbows_out", "grunting"],
+      "complexity_level": 3,
+      "urgency": "immediate",
+      "risk_score": 10,
+      "vet_required": true,
+      "required_specialization": "large_animal_expert",
+      "home_care": ["strict_isolation"],
+      "treatment": "antibiotics may mask symptoms; cull and report usually required",
+      "symptom_match_weights": {
+        "fever": 20, "coughing": 30, "difficulty_breathing": 30, "nasal_discharge": 20
+      }
+    },
+    {
+      "id": "ccpp",
+      "name": "Contagious Caprine Pleuropneumonia (CCPP)",
+      "urdu_name": "بکریوں کی متعدی نمونیا",
+      "animal_types": ["goat"],
+      "key_symptoms": ["high_fever", "severe_cough", "respiratory_distress", "sudden_death"],
+      "visual_signs": ["frothy_nasal_discharge", "breathing_with_open_mouth"],
+      "complexity_level": 3,
+      "urgency": "immediate",
+      "risk_score": 10,
+      "vet_required": true,
+      "required_specialization": "small_ruminants",
+      "home_care": ["strict_isolation"],
+      "treatment": "tetracycline or macrolide antibiotics",
+      "symptom_match_weights": {
+        "high_fever": 20, "severe_cough": 30, "respiratory_distress": 30, "sudden_death": 20
+      }
+    },
+    {
+      "id": "bluetongue",
+      "name": "Bluetongue",
+      "urdu_name": "نیلی زبان کی بیماری",
+      "animal_types": ["sheep", "goat", "cattle"],
+      "key_symptoms": ["fever", "swollen_lips", "blue_tongue", "lameness", "salivation"],
+      "visual_signs": ["swollen_face", "drooling", "coronitis"],
+      "complexity_level": 2,
+      "urgency": "immediate",
+      "risk_score": 7,
+      "vet_required": true,
+      "required_specialization": "small_ruminants",
+      "home_care": ["insect_control", "soft_food", "rest"],
+      "treatment": "supportive care, no specific cure",
+      "symptom_match_weights": {
+        "fever": 15, "swollen_lips": 25, "blue_tongue": 30, "lameness": 15, "salivation": 15
+      }
+    },
+    {
+      "id": "q_fever",
+      "name": "Q Fever",
+      "urdu_name": "کیو فیور",
+      "animal_types": ["cattle", "sheep", "goat"],
+      "key_symptoms": ["abortion", "stillbirth", "weak_offspring", "anorexia"],
+      "visual_signs": ["aborted_fetus", "retained_placenta"],
+      "complexity_level": 3,
+      "urgency": "next_day",
+      "risk_score": 7,
+      "vet_required": true,
+      "required_specialization": "reproductive",
+      "home_care": ["extreme_hygiene", "gloves_and_mask_when_handling_fetus"],
+      "treatment": "tetracycline antibiotics",
+      "symptom_match_weights": {
+        "abortion": 40, "stillbirth": 30, "weak_offspring": 20, "anorexia": 10
+      }
+    },
+    {
+      "id": "rift_valley_fever",
+      "name": "Rift Valley Fever",
+      "urdu_name": "رفٹ ویلی فیور",
+      "animal_types": ["cattle", "sheep", "goat", "camel"],
+      "key_symptoms": ["high_abortion_rate", "sudden_death_in_young", "fever", "nasal_discharge"],
+      "visual_signs": ["bloody_diarrhea", "weakness_in_newborns"],
+      "complexity_level": 3,
+      "urgency": "immediate",
+      "risk_score": 10,
+      "vet_required": true,
+      "required_specialization": "large_animal_expert",
+      "home_care": ["mosquito_control", "safe_disposal_of_fetuses"],
+      "treatment": "supportive care, report to authorities",
+      "symptom_match_weights": {
+        "high_abortion_rate": 40, "sudden_death_in_young": 30, "fever": 15, "nasal_discharge": 15
+      }
+    },
+    {
+      "id": "vaginal_prolapse",
+      "name": "Vaginal Prolapse",
+      "urdu_name": "شرمگاہ کا باہر آنا",
+      "animal_types": ["cattle", "buffalo", "sheep"],
+      "key_symptoms": ["red_mass_from_vulva", "straining", "discomfort", "frequent_urination"],
+      "visual_signs": ["swollen_red_tissue_visible_when_lying_down"],
+      "complexity_level": 2,
+      "urgency": "same_day",
+      "risk_score": 7,
+      "vet_required": true,
+      "required_specialization": "reproductive",
+      "home_care": ["clean_with_mild_antiseptic", "keep_animal_standing"],
+      "treatment": "epidural, cleaning, replacement, and suturing by vet",
+      "symptom_match_weights": {
+        "red_mass_from_vulva": 60, "straining": 20, "discomfort": 10, "frequent_urination": 10
+      }
+    },
+    {
+      "id": "vitamin_a_deficiency",
+      "name": "Vitamin A Deficiency",
+      "urdu_name": "وٹامن اے کی کمی",
+      "animal_types": ["cattle", "buffalo", "goat", "sheep"],
+      "key_symptoms": ["night_blindness", "corneal_opacity", "rough_coat", "poor_growth"],
+      "visual_signs": ["bumping_into_objects_at_dusk", "cloudy_eyes"],
+      "complexity_level": 1,
+      "urgency": "routine",
+      "risk_score": 4,
+      "vet_required": false,
+      "required_specialization": "general",
+      "home_care": ["feed_green_fodder"],
+      "treatment": "Vitamin A injections or feed supplements",
+      "symptom_match_weights": {
+        "night_blindness": 40, "corneal_opacity": 30, "rough_coat": 15, "poor_growth": 15
+      }
+    }
+  ]
+}

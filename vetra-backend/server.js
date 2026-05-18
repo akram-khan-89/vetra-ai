@@ -40,6 +40,10 @@ app.get('/', (req, res) => {
   res.send('Vetra AI API is running...');
 });
 
+// API Routes
+app.use('/api/v1/diagnose', require('./routes/diagnosis'));
+app.use('/api/v1/intake', require('./routes/intake'));
+
 // 404 Handler
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
