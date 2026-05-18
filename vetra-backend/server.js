@@ -43,6 +43,7 @@ app.get('/', (req, res) => {
 // API Routes
 app.use('/api/v1/diagnose', require('./routes/diagnosis'));
 app.use('/api/v1/intake', require('./routes/intake'));
+app.use('/api/v1/vets', require('./routes/vets.routes'));
 
 // 404 Handler
 app.use((req, res) => {
