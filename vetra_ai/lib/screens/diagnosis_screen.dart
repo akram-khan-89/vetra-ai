@@ -1,69 +1,345 @@
 import 'package:flutter/material.dart';
+import '../services/api_service.dart';
+import 'vet_list_screen.dart';
 
-class DiagnosisScreen extends StatelessWidget {
-  final Map<String, dynamic> data;
+class DiagnosisScreen extends StatefulWidget {
+  final Map<String, dynamic> listenResult;
 
-  const DiagnosisScreen({super.key, required this.data});
+  const DiagnosisScreen({super.key, required this.listenResult});
+
+  @override
+  State<DiagnosisScreen> createState() => _DiagnosisScreenState();
+}
+
+class _DiagnosisScreenState extends State<DiagnosisScreen> {
+  bool _isLoading = true;
+  Map<String, dynamic>? _diagnosisResult;
+  String? _errorMessage;
+  final ApiService _apiService = ApiService();
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchDiagnosis();
+  }
+
+  void _fetchDiagnosis() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      // Assuming listenResult has 'data' containing 'symptoms' and 'animal_type'
+      final data = widget.listenResult['data'] ?? {};
+      final symptomsData = data['symptoms'];
+      List<String> symptoms = [];
+      if (symptomsData is List) {
+        symptoms = symptomsData.map((e) => e.toString()).toList();
+      } else if (symptomsData is String) {
+        symptoms = symptomsData.split(',').map((e) => e.trim()).toList();
+      }
+
+      final animalType = data['animal_type'] ?? 'unknown';
+
+      final result = await _apiService.postDiagnose(symptoms, animalType);
+      setState(() {
+        _diagnosisResult = result;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = e.toString();
+        _isLoading = false;
+      });
+    }
+  }
+
+  Color _getRiskColor(int score) {
+    if (score >= 7) return Colors.red;
+    if (score >= 4) return Colors.orange;
+    return Colors.green;
+  }
+
+  String _getUrgencyText(String? urgency) {
+    if (urgency == null) return '';
+    if (urgency.toLowerCase().contains('urgent')) {
+      return 'ابھی ضروری'; // Urgent Now
+    }
+    if (urgency.toLowerCase().contains('today')) {
+      return 'آج'; // Today
+    }
+    return urgency;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Diagnosis'),
+        title: const Text('Diagnosis Result'),
+        backgroundColor: const Color(0xFF0F6E56),
+        foregroundColor: Colors.white,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+      body: _isLoading
+          ? const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF0F6E56)),
+                  ),
+                  SizedBox(height: 16),
+                  Text('Analyzing symptoms...'),
+                ],
+              ),
+            )
+          : _errorMessage != null
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.error_outline, size: 60, color: Colors.red),
+                      const SizedBox(height: 16),
+                      Text('Error: $_errorMessage'),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: _fetchDiagnosis,
+                        child: const Text('Retry'),
+                      ),
+                    ],
+                  ),
+                )
+              : _diagnosisResult == null
+                  ? const Center(child: Text('No data available'))
+                  : _buildResultContent(),
+    );
+  }
+
+  Widget _buildResultContent() {
+    final data = _diagnosisResult!['diagnosis'] ?? {};
+    final diseaseName = data['primary_diagnosis'] ?? 'Unknown Disease';
+    final diseaseUrdu = data['disease_name_urdu'] ?? 'نامعلوم بیماری';
+    final confidence = (data['confidence_percent'] ?? 0).toDouble();
+    final riskScore = data['risk_score'] ?? 0;
+    final urgency = data['urgency'];
+    final homeCare = data['home_care'] as List<dynamic>? ?? [];
+    final reasoning = data['reasoning'] ?? 'No reasoning provided.';
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 1. Disease name card
+          Card(
+            elevation: 4,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            child: Column(
+              children: [
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16),
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF0F6E56),
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+                  ),
+                  child: Text(
+                    diseaseName,
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    diseaseUrdu,
+                    style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                    textDirection: TextDirection.rtl,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // 2. Confidence bar
+          const Text(
+            'Confidence',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          Row(
             children: [
-              const Icon(
-                Icons.check_circle_outline,
-                size: 80,
-                color: Color(0xFF0F6E56),
-              ),
-              const SizedBox(height: 24),
-              const Text(
-                'Intake Successful',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF0F6E56),
+              Expanded(
+                child: LinearProgressIndicator(
+                  value: confidence / 100,
+                  backgroundColor: Colors.grey[300],
+                  valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF0F6E56)),
+                  minHeight: 10,
                 ),
               ),
-              const SizedBox(height: 16),
-              const Text(
-                'Here is the data received from the backend:',
-                style: TextStyle(fontSize: 16),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 16),
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  data.toString(),
-                  style: const TextStyle(fontFamily: 'Courier'),
-                ),
-              ),
-              const SizedBox(height: 32),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF0F6E56),
-                  foregroundColor: Colors.white,
-                ),
-                child: const Text('Back to Home'),
+              const SizedBox(width: 12),
+              Text(
+                '${confidence.toInt()}% confidence',
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ],
           ),
-        ),
+          const SizedBox(height: 16),
+
+          // 3. Risk badge & 4. Urgency text
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Chip(
+                label: Text(
+                  'Risk Score: $riskScore',
+                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+                backgroundColor: _getRiskColor(riskScore),
+              ),
+              if (urgency != null)
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: Colors.amber.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.amber),
+                  ),
+                  child: Text(
+                    _getUrgencyText(urgency),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.brown,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: 24),
+
+          // 5. Home care steps
+          const Text(
+            'Home Care Steps',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          if (homeCare.isEmpty)
+            const Text('No specific home care steps provided.')
+          else
+            ...homeCare.map((step) => Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('• ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      Expanded(
+                        child: Text(
+                          step.toString(),
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    ],
+                  ),
+                )),
+          const SizedBox(height: 32),
+
+          // 6. "Find a Vet" large green button
+          SizedBox(
+            width: double.infinity,
+            height: 50,
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => VetListScreen(diagnosisResult: data),
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF0F6E56),
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              child: const Text(
+                'Find a Vet',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // 7. "View Agent Reasoning" small text link
+          Center(
+            child: TextButton(
+              onPressed: () {
+                _showReasoningBottomSheet(context, reasoning);
+              },
+              child: const Text(
+                'View Agent Reasoning',
+                style: TextStyle(
+                  color: Color(0xFF0F6E56),
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
+    );
+  }
+
+  void _showReasoningBottomSheet(BuildContext context, String reasoning) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Agent Reasoning',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Text(
+                    reasoning,
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.pop(context),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF0F6E56),
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text('Close'),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

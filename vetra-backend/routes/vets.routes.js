@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { discoverAgent } = require('../agents/discover_agent');
+const { decideAgent } = require('../agents/decide_agent');
 
 // GET /api/v1/vets/nearby
 router.get('/nearby', async (req, res) => {
@@ -29,6 +30,26 @@ router.get('/nearby', async (req, res) => {
     res.json({ success: true, data: nearbyVets });
   } catch (error) {
     console.error('[DISCOVER ROUTE] Error:', error.message);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// POST /api/v1/vets/decide
+router.post('/decide', async (req, res) => {
+  try {
+    const { vets = [], diagnosis, urgency } = req.body || {};
+
+    if (!diagnosis) {
+      return res.status(400).json({ error: 'diagnosis is required' });
+    }
+
+    console.log(`[DECIDE ROUTE] Received request to decide among ${vets.length} vets`);
+
+    const decision = await decideAgent(vets, diagnosis, urgency);
+
+    res.json({ success: true, data: decision });
+  } catch (error) {
+    console.error('[DECIDE ROUTE] Error:', error.message);
     res.status(500).json({ error: error.message });
   }
 });

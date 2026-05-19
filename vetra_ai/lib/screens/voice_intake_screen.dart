@@ -97,7 +97,7 @@ class _VoiceIntakeScreenState extends State<VoiceIntakeScreen> with SingleTicker
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DiagnosisScreen(data: result),
+            builder: (context) => DiagnosisScreen(listenResult: result),
           ),
         );
       }
