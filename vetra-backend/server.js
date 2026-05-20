@@ -66,10 +66,11 @@ app.use((err, req, res, next) => {
 });
 
 // Start Server
-const server = app.listen(PORT, () => {
+const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`\n🚀 Vetra AI Server is running in ${process.env.NODE_ENV || 'development'} mode`);
   console.log(`📡 Listening on port: ${PORT}`);
-  console.log(`🔗 Health check: http://localhost:${PORT}/health\n`);
+  //console.log(`🔗 Health check: http://localhost:${PORT}/health\n`);
+  console.log(`🔗 Health route ready: /health\n`);
 });
 
 // Graceful Shutdown

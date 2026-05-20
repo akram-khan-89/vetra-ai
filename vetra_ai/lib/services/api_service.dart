@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  static const String baseUrl = 'http://192.168.18.91:3000';
+  static const String baseUrl =
+      'https://vetra-backend-695711956978.asia-south1.run.app';
 
   Future<Map<String, dynamic>> postVoiceIntake(String text) async {
     final url = Uri.parse('$baseUrl/api/v1/intake/voice');
@@ -23,16 +24,16 @@ class ApiService {
     }
   }
 
-  Future<Map<String, dynamic>> postImageIntake(String base64Image, String caseId) async {
+  Future<Map<String, dynamic>> postImageIntake(
+    String base64Image,
+    String caseId,
+  ) async {
     final url = Uri.parse('$baseUrl/api/v1/intake/image');
     try {
       final response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'image_base64': base64Image,
-          'case_id': caseId,
-        }),
+        body: jsonEncode({'image_base64': base64Image, 'case_id': caseId}),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -45,7 +46,11 @@ class ApiService {
     }
   }
 
-  Future<Map<String, dynamic>> postDiagnose(List<String> symptoms, String animalType, [List<String>? visionFindings]) async {
+  Future<Map<String, dynamic>> postDiagnose(
+    List<String> symptoms,
+    String animalType, [
+    List<String>? visionFindings,
+  ]) async {
     final url = Uri.parse('$baseUrl/api/v1/diagnose');
     try {
       final response = await http.post(
@@ -68,8 +73,16 @@ class ApiService {
     }
   }
 
-  Future<Map<String, dynamic>> getNearbyVets(double lat, double lng, String specialty, String urgency, int complexity) async {
-    final url = Uri.parse('$baseUrl/api/v1/vets/nearby?lat=$lat&lng=$lng&specialty=$specialty&urgency=$urgency&complexity=$complexity');
+  Future<Map<String, dynamic>> getNearbyVets(
+    double lat,
+    double lng,
+    String specialty,
+    String urgency,
+    int complexity,
+  ) async {
+    final url = Uri.parse(
+      '$baseUrl/api/v1/vets/nearby?lat=$lat&lng=$lng&specialty=$specialty&urgency=$urgency&complexity=$complexity',
+    );
     try {
       final response = await http.get(
         url,
@@ -105,7 +118,11 @@ class ApiService {
     }
   }
 
-  Future<Map<String, dynamic>> postDecide(List<dynamic> vets, Map<String, dynamic> diagnosis, String urgency) async {
+  Future<Map<String, dynamic>> postDecide(
+    List<dynamic> vets,
+    Map<String, dynamic> diagnosis,
+    String urgency,
+  ) async {
     final url = Uri.parse('$baseUrl/api/v1/vets/decide');
     try {
       final response = await http.post(
