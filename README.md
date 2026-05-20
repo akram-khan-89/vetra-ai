@@ -4,6 +4,7 @@
 <img src="https://img.shields.io/badge/Node.js-18+-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" />
 <img src="https://img.shields.io/badge/Google_Gemini-AI-4285F4?style=for-the-badge&logo=google&logoColor=white" />
 <img src="https://img.shields.io/badge/Firebase-Firestore-FFCA28?style=for-the-badge&logo=firebase&logoColor=black" />
+<img src="https://img.shields.io/badge/Backend-Live%20on%20Cloud%20Run-4285F4?style=for-the-badge&logo=googlecloud&logoColor=white" />
 <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" />
 
 # 🐾 Vetra AI
@@ -58,7 +59,8 @@ Full **Urdu/English toggle** on every screen. Designed for low-literacy users wi
 └──────────────────────┬──────────────────────────────────┘
                        │ REST API
 ┌──────────────────────▼──────────────────────────────────┐
-│                   Express Backend                        │
+│         Express Backend — Google Cloud Run               │
+│   asia-south1 · vetra-backend-695711956978               │
 │                                                          │
 │  LISTEN → DIAGNOSE → DISCOVER → DECIDE → EXECUTE        │
 │     ↕           ↕          ↕        ↕        ↕          │
@@ -100,7 +102,7 @@ Full **Urdu/English toggle** on every screen. Designed for low-literacy users wi
 | `firebase_storage` | Image/audio upload |
 | `geolocator` | GPS coordinates for vet search |
 
-**Backend (Node.js / Express)**
+**Backend (Node.js / Express — deployed on Google Cloud Run)**
 
 | Package | Purpose |
 |---------|---------|
@@ -109,19 +111,19 @@ Full **Urdu/English toggle** on every screen. Designed for low-literacy users wi
 | `multer` | Multipart image/audio upload handling |
 | `node-cron` | Scheduled background jobs |
 
-**Cloud Services:** Firebase Firestore · Firebase Storage · Firebase Auth · Firebase Cloud Messaging · Google Gemini Pro · Google Gemini Vision · Google Maps Platform
+**Cloud Services:** Google Cloud Run · Firebase Firestore · Firebase Storage · Firebase Auth · Firebase Cloud Messaging · Google Gemini Pro · Google Gemini Vision · Google Maps Platform
 
 ---
 
 ## 🚀 Getting Started
 
+> **Note:** The backend is already live — you only need to set up the Flutter app to get started.
+
 ### Prerequisites
 
 - [Flutter SDK](https://docs.flutter.dev/get-started/install) v3.11+
-- [Node.js](https://nodejs.org/) v18+
 - Firebase project (Firestore + Storage + Auth + FCM enabled)
-- [Google Gemini API Key](https://aistudio.google.com/app/apikey)
-- Google Maps API Key (Geocoding + Distance Matrix + Maps SDK)
+- Google Maps API Key
 
 ---
 
@@ -132,7 +134,38 @@ git clone https://github.com/your-username/vetra-ai.git
 cd vetra-ai
 ```
 
-### 2. Backend Setup
+### 2. Flutter App Setup
+
+```bash
+cd vetra_ai
+flutter pub get
+```
+
+Configure Firebase using the FlutterFire CLI:
+
+```bash
+dart pub global activate flutterfire_cli
+flutterfire configure --project=your_firebase_project_id
+```
+
+Or manually place `google-services.json` (Android → `android/app/`) and `GoogleService-Info.plist` (iOS → `ios/Runner/`).
+
+The backend URL is already configured to the live Cloud Run instance:
+
+```dart
+// lib/services/api_service.dart
+const String baseUrl = 'https://vetra-backend-695711956978.asia-south1.run.app/api';
+```
+
+```bash
+flutter run
+```
+
+---
+
+### 3. Running the Backend Locally (Optional — Contributors Only)
+
+If you want to run the backend yourself for development or testing:
 
 ```bash
 cd vetra-backend
@@ -155,37 +188,13 @@ node server.js
 # ✓ Server running on http://localhost:3000
 ```
 
-### 3. Flutter App Setup
-
-```bash
-cd vetra_ai
-flutter pub get
-```
-
-Configure Firebase using the FlutterFire CLI:
-
-```bash
-dart pub global activate flutterfire_cli
-flutterfire configure --project=your_firebase_project_id
-```
-
-Or manually place `google-services.json` (Android → `android/app/`) and `GoogleService-Info.plist` (iOS → `ios/Runner/`).
-
-Update your backend URL in `lib/services/api_service.dart`:
-
-```dart
-const String baseUrl = 'http://YOUR_BACKEND_IP:3000/api';
-```
-
-```bash
-flutter run
-```
+Then update `baseUrl` in `lib/services/api_service.dart` to `http://localhost:3000/api`.
 
 ---
 
 ## 📡 API Reference
 
-All endpoints are prefixed with `/api`.
+**Base URL:** `https://vetra-backend-695711956978.asia-south1.run.app/api`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -253,7 +262,7 @@ vetra-ai/
 │       ├── services/           # API calls, Firebase
 │       └── theme/              # StitchColors design system
 │
-└── vetra-backend/              # Node.js Express API
+└── vetra-backend/              # Node.js Express API (deployed on Cloud Run)
     ├── routes/                 # session, listen, vision, diagnose, vets, booking
     ├── agents/                 # symptomAgent, visionAgent, diagnosisAgent, decisionAgent
     ├── firebase/               # Firebase Admin SDK init
@@ -269,6 +278,7 @@ vetra-ai/
 - `firebase-service-account.json` excluded via `.gitignore`
 - All Gemini API calls made **server-side** — the Flutter client never holds the API key
 - Firebase Security Rules should restrict Firestore reads/writes to authenticated users only
+- Backend deployed on Google Cloud Run with IAM-managed access
 
 ---
 
