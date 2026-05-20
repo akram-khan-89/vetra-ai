@@ -90,6 +90,8 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
     return urgency;
   }
 
+  bool _showUrduHomeCare = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -144,6 +146,7 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
     final riskScore = data['risk_score'] ?? 0;
     final urgency = data['urgency'];
     final homeCare = data['home_care'] as List<dynamic>? ?? [];
+    final homeCareUrdu = data['home_care_urdu'] as List<dynamic>? ?? []; // Urdu translations
     final reasoning = data['reasoning'] ?? 'No reasoning provided.';
 
     return SingleChildScrollView(
@@ -165,24 +168,25 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
                     borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
                   ),
                   child: Text(
-                    diseaseName,
+                    diseaseUrdu,
                     style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
+                    textDirection: TextDirection.rtl,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
-                    diseaseUrdu,
+                    diseaseName,
                     style: const TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
                     ),
-                    textDirection: TextDirection.rtl,
+                    textDirection: TextDirection.ltr,
                   ),
                 ),
               ],
@@ -230,7 +234,7 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: Colors.amber.withValues(alpha: 0.2),
+                    color: Colors.amber.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(color: Colors.amber),
                   ),
@@ -248,29 +252,67 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
           const SizedBox(height: 24),
 
           // 5. Home care steps
-          const Text(
-            'Home Care Steps',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Home Care Steps',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              OutlinedButton.icon(
+                onPressed: () => setState(() => _showUrduHomeCare = !_showUrduHomeCare),
+                icon: Icon(
+                  _showUrduHomeCare ? Icons.g_translate : Icons.language,
+                  size: 16,
+                  color: const Color(0xFF0F6E56),
+                ),
+                label: Text(
+                  _showUrduHomeCare ? 'English' : 'اردو (Urdu)',
+                  style: const TextStyle(
+                    color: Color(0xFF0F6E56),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(color: Color(0xFF0F6E56)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 8),
-          if (homeCare.isEmpty)
-            const Text('No specific home care steps provided.')
-          else
-            ...homeCare.map((step) => Padding(
+          // Choose which list to display based on toggle
+          Builder(
+            builder: (context) {
+              final bool isUrdu = _showUrduHomeCare && homeCareUrdu.isNotEmpty;
+              final List<dynamic> steps = isUrdu ? homeCareUrdu : homeCare;
+              if (steps.isEmpty) {
+                return const Text('No specific home care steps provided.');
+              }
+              return Column(
+                children: steps.map((step) => Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4.0),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
                     children: [
-                      const Text('• ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      Text(isUrdu ? ' •' : '• ', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                       Expanded(
                         child: Text(
                           step.toString(),
                           style: const TextStyle(fontSize: 16),
+                          textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
                         ),
                       ),
                     ],
                   ),
-                )),
+                )).toList(),
+              );
+            },
+          ),
           const SizedBox(height: 32),
 
           // 6. "Find a Vet" large green button

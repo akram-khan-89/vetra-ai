@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:share_plus/share_plus.dart';
 import '../services/api_service.dart';
 import 'booking_confirmation_screen.dart';
 
@@ -82,39 +81,21 @@ class _WhatsAppPreviewScreenState extends State<WhatsAppPreviewScreen> {
         _isLoading = false;
       });
 
-      if (launchWhatsApp) {
-        final imagePath = widget.diagnosis['image_path'];
-        if (imagePath != null && File(imagePath).existsSync()) {
+      if (launchWhatsApp && _whatsappLink != null) {
+        final uri = Uri.parse(_whatsappLink!);
+        try {
+          final success = await launchUrl(uri, mode: LaunchMode.externalApplication);
+          if (!success) {
+            await launchUrl(uri, mode: LaunchMode.platformDefault);
+          }
+        } catch (e) {
           try {
-            await SharePlus.instance.share(
-              ShareParams(
-                text: _messageUrdu,
-                files: [XFile(imagePath)],
-              ),
-            );
-          } catch (e) {
+            await launchUrl(uri, mode: LaunchMode.platformDefault);
+          } catch (_) {
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Could not share image via WhatsApp: $e')),
+                const SnackBar(content: Text('Could not launch WhatsApp or browser.')),
               );
-            }
-          }
-        } else if (_whatsappLink != null) {
-          final uri = Uri.parse(_whatsappLink!);
-          try {
-            final success = await launchUrl(uri, mode: LaunchMode.externalApplication);
-            if (!success) {
-              await launchUrl(uri, mode: LaunchMode.platformDefault);
-            }
-          } catch (e) {
-            try {
-              await launchUrl(uri, mode: LaunchMode.platformDefault);
-            } catch (_) {
-              if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Could not launch WhatsApp or browser.')),
-                );
-              }
             }
           }
         }

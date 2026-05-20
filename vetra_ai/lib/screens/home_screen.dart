@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'placeholder_screen.dart';
 import 'voice_intake_screen.dart';
 import 'camera_screen.dart';
+import 'profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,7 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
     HomeTabContent(),
     PlaceholderScreen(text: 'Cases'),
     PlaceholderScreen(text: 'Vets'),
-    PlaceholderScreen(text: 'Profile'),
+    ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {

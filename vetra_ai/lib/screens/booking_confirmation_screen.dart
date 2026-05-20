@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 import 'home_screen.dart';
 
 class BookingConfirmationScreen extends StatefulWidget {
@@ -20,12 +22,36 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
   @override
   void initState() {
     super.initState();
+    // Save booking to history
+    _saveBookingToHistory();
     // Trigger animation after the build phase
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         _opacity = 1.0;
       });
     });
+  }
+
+  Future<void> _saveBookingToHistory() async {
+    final prefs = await SharedPreferences.getInstance();
+    final List<String> bookingsList = prefs.getStringList('bookingHistory') ?? [];
+    
+    // Add current booking
+    final vetName = widget.bookingResult['vet_name'] ?? 'Doctor';
+    final rawTime = widget.bookingResult['confirmed_time'] ?? widget.bookingResult['appointment_time'];
+    final timeStr = _formatDateTime(rawTime);
+    final pricing = widget.bookingResult['pricing'] ?? {};
+    final totalFee = pricing['total_rs'] ?? 1000;
+    
+    final bookingEntry = {
+      'vetName': vetName,
+      'time': timeStr,
+      'fee': totalFee.toString(),
+      'timestamp': DateTime.now().toIso8601String(),
+    };
+    
+    bookingsList.insert(0, jsonEncode(bookingEntry));
+    await prefs.setStringList('bookingHistory', bookingsList);
   }
 
   String _formatDateTime(String? isoString) {
