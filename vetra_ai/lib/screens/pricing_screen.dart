@@ -95,7 +95,10 @@ class _PricingScreenState extends State<PricingScreen> {
     return Scaffold(
       backgroundColor: StitchColors.background,
       appBar: AppBar(
-        title: const Text('Pricing Details / فیس کی تفصیلات'),
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: const Text('Pricing Details / فیس کی تفصیلات'),
+        ),
         backgroundColor: StitchColors.primary,
         foregroundColor: Colors.white,
         elevation: 0,
@@ -293,9 +296,13 @@ class _PricingScreenState extends State<PricingScreen> {
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               ),
-              child: const Text(
-                'Book This Vet / ڈاکٹر بک کریں',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: const Text(
+                  'Book This Vet / ڈاکٹر بک کریں',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
           ),

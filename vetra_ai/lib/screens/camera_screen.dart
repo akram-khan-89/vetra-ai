@@ -91,7 +91,10 @@ class _CameraScreenState extends State<CameraScreen> {
     return Scaffold(
       backgroundColor: StitchColors.background,
       appBar: AppBar(
-        title: const Text('Photo Analysis / تصویر کا تجزیہ', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: const Text('Photo Analysis / تصویر کا تجزیہ', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        ),
         backgroundColor: StitchColors.primary,
         iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
@@ -210,11 +213,18 @@ class _CameraScreenState extends State<CameraScreen> {
                       onPressed: _continue,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: StitchColors.primary,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                         elevation: 2,
                       ),
-                      child: const Text('Continue with Findings / نتائج کے ساتھ جاری رکھیں', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: const Text(
+                          'Continue with Findings / نتائج کے ساتھ جاری رکھیں',
+                          style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                     ),
                   ],
                 ],

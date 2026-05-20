@@ -135,7 +135,10 @@ class _WhatsAppPreviewScreenState extends State<WhatsAppPreviewScreen> {
     return Scaffold(
       backgroundColor: StitchColors.background,
       appBar: AppBar(
-        title: const Text('Message Preview / پیغام کا پیش نظارہ'),
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: const Text('Message Preview / پیغام کا پیش نظارہ'),
+        ),
         backgroundColor: StitchColors.primary,
         foregroundColor: Colors.white,
         elevation: 0,
@@ -289,11 +292,18 @@ class _WhatsAppPreviewScreenState extends State<WhatsAppPreviewScreen> {
           ElevatedButton.icon(
             onPressed: () => _createBookingAndNavigate(launchWhatsApp: true),
             icon: const Icon(Icons.send, color: Colors.white),
-            label: const Text('Send via WhatsApp / واٹس ایپ پر بھیجیں'),
+            label: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: const Text(
+                'Send via WhatsApp / واٹس ایپ پر بھیجیں',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.green.shade600,
               foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 16),
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               elevation: 2,
             ),
@@ -306,10 +316,17 @@ class _WhatsAppPreviewScreenState extends State<WhatsAppPreviewScreen> {
             style: OutlinedButton.styleFrom(
               foregroundColor: StitchColors.primary,
               side: const BorderSide(color: StitchColors.primary, width: 1.5),
-              padding: const EdgeInsets.symmetric(vertical: 16),
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             ),
-            child: const Text('Book without WhatsApp / واٹس ایپ کے بغیر بک کریں', style: TextStyle(fontWeight: FontWeight.bold)),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: const Text(
+                'Book without WhatsApp / واٹس ایپ کے بغیر بک کریں',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
           ),
         ],
       ),

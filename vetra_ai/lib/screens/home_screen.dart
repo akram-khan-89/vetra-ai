@@ -248,7 +248,10 @@ class HomeTabContent extends StatelessWidget {
                       );
                     },
                     icon: const Icon(Icons.camera_alt_outlined, size: 20),
-                    label: const Text('Take Photo / تصویر لیں'),
+                    label: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: const Text('Take Photo / تصویر لیں', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: StitchColors.secondary,
                       foregroundColor: Colors.white,

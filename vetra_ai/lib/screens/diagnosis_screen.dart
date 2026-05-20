@@ -97,7 +97,10 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
     return Scaffold(
       backgroundColor: StitchColors.background,
       appBar: AppBar(
-        title: const Text('Diagnosis Result / تشخیص کا نتیجہ'),
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: const Text('Diagnosis Result / تشخیص کا نتیجہ'),
+        ),
         backgroundColor: StitchColors.primary,
         foregroundColor: Colors.white,
         elevation: 0,
@@ -372,9 +375,13 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               ),
-              child: const Text(
-                'Find a Vet / ڈاکٹر تلاش کریں',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: const Text(
+                  'Find a Vet / ڈاکٹر تلاش کریں',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
           ),

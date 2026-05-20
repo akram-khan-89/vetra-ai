@@ -298,11 +298,14 @@ class _VetListScreenState extends State<VetListScreen> {
                           );
                         },
                         icon: const Icon(Icons.chat_bubble, size: 16),
-                        label: const Text('WhatsApp'),
+                        label: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: const Text('WhatsApp', style: TextStyle(fontWeight: FontWeight.bold)),
+                        ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
                       ),
@@ -316,11 +319,14 @@ class _VetListScreenState extends State<VetListScreen> {
                           );
                         },
                         icon: const Icon(Icons.phone, size: 16),
-                        label: const Text('Call'),
+                        label: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: const Text('Call', style: TextStyle(fontWeight: FontWeight.bold)),
+                        ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: StitchColors.secondary,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
                       ),
@@ -342,10 +348,13 @@ class _VetListScreenState extends State<VetListScreen> {
                         style: OutlinedButton.styleFrom(
                           foregroundColor: StitchColors.primary,
                           side: const BorderSide(color: StitchColors.primary, width: 1.5),
-                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
-                        child: const Text('Select'),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: const Text('Select', style: TextStyle(fontWeight: FontWeight.bold)),
+                        ),
                       ),
                     ),
                   ],
@@ -626,7 +635,10 @@ class _VetListScreenState extends State<VetListScreen> {
     return Scaffold(
       backgroundColor: StitchColors.background,
       appBar: AppBar(
-        title: const Text('Find a Vet / معالج تلاش کریں'),
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: const Text('Find a Vet / معالج تلاش کریں'),
+        ),
         backgroundColor: StitchColors.primary,
         foregroundColor: Colors.white,
         elevation: 0,

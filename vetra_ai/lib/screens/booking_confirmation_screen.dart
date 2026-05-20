@@ -84,7 +84,10 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
     return Scaffold(
       backgroundColor: StitchColors.background,
       appBar: AppBar(
-        title: const Text('Booking Confirmation / بکنگ کی تصدیق'),
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: const Text('Booking Confirmation / بکنگ کی تصدیق'),
+        ),
         backgroundColor: StitchColors.primary,
         foregroundColor: Colors.white,
         automaticallyImplyLeading: false, // Prevent going back
@@ -254,9 +257,13 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 ),
-                child: const Text(
-                  'Done / مکمل',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: const Text(
+                    'Done / مکمل',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
             ),

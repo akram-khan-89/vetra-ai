@@ -206,12 +206,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                           : null,
                                     ),
                                     child: Center(
-                                      child: Text(
-                                        'Login / لاگ ان',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 14,
-                                          color: !_isSignUp ? StitchColors.primary : const Color(0xFF42493E),
+                                      child: FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Text(
+                                          'Login / لاگ ان',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                            color: !_isSignUp ? StitchColors.primary : const Color(0xFF42493E),
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -239,12 +242,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                           : null,
                                     ),
                                     child: Center(
-                                      child: Text(
-                                        'Sign Up / سائن اپ',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 14,
-                                          color: _isSignUp ? StitchColors.primary : const Color(0xFF42493E),
+                                      child: FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Text(
+                                          'Sign Up / سائن اپ',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                            color: _isSignUp ? StitchColors.primary : const Color(0xFF42493E),
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -343,16 +349,19 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           child: _isLoading
                               ? const CircularProgressIndicator(color: Colors.white)
-                              : Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      _isSignUp ? 'Sign Up / سائن اپ' : 'Login / لاگ ان',
-                                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    const Icon(Icons.arrow_forward, size: 20),
-                                  ],
+                              : FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        _isSignUp ? 'Sign Up / سائن اپ' : 'Login / لاگ ان',
+                                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      const Icon(Icons.arrow_forward, size: 20),
+                                    ],
+                                  ),
                                 ),
                         ),
                       ],

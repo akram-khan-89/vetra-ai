@@ -125,7 +125,10 @@ class _VoiceIntakeScreenState extends State<VoiceIntakeScreen> with SingleTicker
     return Scaffold(
       backgroundColor: StitchColors.background,
       appBar: AppBar(
-        title: const Text('Voice Intake / آواز ریکارڈ کریں'),
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: const Text('Voice Intake / آواز ریکارڈ کریں'),
+        ),
         backgroundColor: StitchColors.primary,
         foregroundColor: Colors.white,
         elevation: 0,
@@ -254,12 +257,16 @@ class _VoiceIntakeScreenState extends State<VoiceIntakeScreen> with SingleTicker
                   style: ElevatedButton.styleFrom(
                     backgroundColor: StitchColors.primary,
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                   ),
-                  child: const Text(
-                    'Confirm / تصدیق کریں',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: const Text(
+                      'Confirm / تصدیق کریں',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ),
               ),
