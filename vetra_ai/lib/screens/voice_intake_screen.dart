@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import '../services/api_service.dart';
+import '../theme/stitch_theme.dart';
 import 'diagnosis_screen.dart';
 
 class VoiceIntakeScreen extends StatefulWidget {
@@ -31,7 +32,7 @@ class _VoiceIntakeScreenState extends State<VoiceIntakeScreen> with SingleTicker
       vsync: this,
       duration: const Duration(milliseconds: 1000),
     );
-    _pulseAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
+    _pulseAnimation = Tween<double>(begin: 1.0, end: 1.25).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
   }
@@ -56,7 +57,7 @@ class _VoiceIntakeScreenState extends State<VoiceIntakeScreen> with SingleTicker
   void _startListening() async {
     await _speechToText.listen(
       onResult: _onSpeechResult,
-      localeId: 'ur_PK', // Try to listen in Urdu as implied by previous screen
+      localeId: 'ur_PK', // Listen in Urdu for farmer convenience
     );
     setState(() {
       _isRecording = true;
@@ -122,33 +123,44 @@ class _VoiceIntakeScreenState extends State<VoiceIntakeScreen> with SingleTicker
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: StitchColors.background,
       appBar: AppBar(
-        title: const Text('Voice Intake'),
-        backgroundColor: const Color(0xFF0F6E56),
+        title: const Text('Voice Intake / آواز ریکارڈ کریں'),
+        backgroundColor: StitchColors.primary,
         foregroundColor: Colors.white,
+        elevation: 0,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(24.0),
         child: Column(
           children: [
-            // Transcription area
+            // Styled Transcription card
             Expanded(
               child: Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.grey[300]!),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: StitchColors.surfaceContainerHigh, width: 1.5),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.015),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
                 child: SingleChildScrollView(
                   child: Text(
                     _lastWords.isEmpty
-                        ? 'Tap the microphone and start speaking...'
-                        : _lastWords,
+                      ? 'Tap the microphone and start speaking...\n\nمائیکروفون دبائیں اور بولنا شروع کریں...'
+                      : _lastWords,
                     style: TextStyle(
                       fontSize: 18,
-                      color: _lastWords.isEmpty ? Colors.grey : Colors.black,
+                      fontWeight: FontWeight.w500,
+                      color: _lastWords.isEmpty ? Colors.grey : StitchColors.onBackground,
+                      height: 1.5,
                     ),
                   ),
                 ),
@@ -158,11 +170,14 @@ class _VoiceIntakeScreenState extends State<VoiceIntakeScreen> with SingleTicker
             // Confidence Chip
             if (_lastWords.isNotEmpty)
               Chip(
-                avatar: const Icon(Icons.language, size: 16),
+                avatar: const Icon(Icons.language, size: 16, color: StitchColors.primary),
                 label: Text(
                   'Urdu (ur_PK) | Confidence: ${(_confidence * 100).toStringAsFixed(0)}%',
+                  style: const TextStyle(fontWeight: FontWeight.bold, color: StitchColors.primary, fontSize: 12),
                 ),
-                backgroundColor: const Color(0xFF0F6E56).withOpacity(0.1),
+                backgroundColor: StitchColors.primary.withOpacity(0.08),
+                side: BorderSide.none,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               ),
             const SizedBox(height: 24),
             // Mic Button
@@ -170,25 +185,25 @@ class _VoiceIntakeScreenState extends State<VoiceIntakeScreen> with SingleTicker
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  // Pulsing effect
+                  // Pulsing effect using Stitch green colors
                   if (_isRecording)
                     ScaleTransition(
                       scale: _pulseAnimation,
                       child: Container(
-                        width: 100,
-                        height: 100,
+                        width: 110,
+                        height: 110,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.green.withOpacity(0.3),
+                          color: StitchColors.primary.withOpacity(0.18),
                         ),
                       ),
                     ),
-                  // Main button
+                  // Main action button
                   Material(
-                    elevation: 4,
+                    elevation: 6,
                     shape: const CircleBorder(),
                     clipBehavior: Clip.antiAlias,
-                    color: _isRecording ? Colors.red : const Color(0xFF0F6E56),
+                    color: _isRecording ? Colors.red.shade600 : StitchColors.primary,
                     child: InkWell(
                       onTap: () {
                         if (!_speechEnabled) {
@@ -222,14 +237,14 @@ class _VoiceIntakeScreenState extends State<VoiceIntakeScreen> with SingleTicker
             ),
             const SizedBox(height: 16),
             Text(
-              _isRecording ? 'Listening...' : 'Tap to speak',
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              _isRecording ? 'Listening / سن رہا ہے...' : 'Tap to speak / بولنے کے لیے دبائیں',
+              style: const TextStyle(fontWeight: FontWeight.bold, color: StitchColors.onBackground),
             ),
             const SizedBox(height: 24),
             // Action Buttons or Loading
             if (_isLoading)
               const CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF0F6E56)),
+                valueColor: AlwaysStoppedAnimation<Color>(StitchColors.primary),
               )
             else if (_lastWords.isNotEmpty && !_isRecording)
               SizedBox(
@@ -237,13 +252,14 @@ class _VoiceIntakeScreenState extends State<VoiceIntakeScreen> with SingleTicker
                 child: ElevatedButton(
                   onPressed: _submitData,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF0F6E56),
+                    backgroundColor: StitchColors.primary,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                   ),
                   child: const Text(
-                    'Confirm',
-                    style: TextStyle(fontSize: 18),
+                    'Confirm / تصدیق کریں',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),

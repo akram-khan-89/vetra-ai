@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
+import '../theme/stitch_theme.dart';
 import 'whatsapp_preview_screen.dart';
 import 'pricing_screen.dart';
 
@@ -19,8 +20,6 @@ class _AllVetsScreenState extends State<AllVetsScreen> {
   
   String _selectedProvince = 'All';
   final TextEditingController _searchController = TextEditingController();
-
-  static const Color primaryColor = Color(0xFF0F6E56);
 
   @override
   void initState() {
@@ -107,11 +106,11 @@ class _AllVetsScreenState extends State<AllVetsScreen> {
 
     for (int i = 0; i < 5; i++) {
       if (i < fullStars) {
-        stars.add(const Icon(Icons.star, color: Colors.amber, size: 16));
+        stars.add(const Icon(Icons.star, color: Colors.amber, size: 14));
       } else if (i == fullStars && hasHalfStar) {
-        stars.add(const Icon(Icons.star_half, color: Colors.amber, size: 16));
+        stars.add(const Icon(Icons.star_half, color: Colors.amber, size: 14));
       } else {
-        stars.add(const Icon(Icons.star_border, color: Colors.amber, size: 16));
+        stars.add(const Icon(Icons.star_border, color: Colors.amber, size: 14));
       }
     }
 
@@ -121,19 +120,13 @@ class _AllVetsScreenState extends State<AllVetsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F9F6),
-      appBar: AppBar(
-        title: const Text('Find a Vet / ڈاکٹر تلاش کریں'),
-        backgroundColor: primaryColor,
-        foregroundColor: Colors.white,
-        elevation: 0,
-      ),
+      backgroundColor: StitchColors.background,
       body: Column(
         children: [
           // Search & Filter Header
           Container(
-            color: primaryColor,
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+            color: StitchColors.primary,
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
             child: Column(
               children: [
                 // Search Bar
@@ -141,18 +134,22 @@ class _AllVetsScreenState extends State<AllVetsScreen> {
                   controller: _searchController,
                   decoration: InputDecoration(
                     hintText: 'Search Name, City, Specialty... / تلاش کریں',
-                    hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
-                    prefixIcon: const Icon(Icons.search, color: primaryColor),
+                    hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 13),
+                    prefixIcon: const Icon(Icons.search, color: StitchColors.primary),
                     filled: true,
                     fillColor: Colors.white,
                     contentPadding: const EdgeInsets.symmetric(vertical: 0),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(14),
+                      borderSide: BorderSide.none,
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14),
                       borderSide: BorderSide.none,
                     ),
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 16),
                 // Province Category Filter Chips
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
@@ -175,7 +172,7 @@ class _AllVetsScreenState extends State<AllVetsScreen> {
           // Main content area
           Expanded(
             child: _isLoading
-                ? const Center(child: CircularProgressIndicator(color: primaryColor))
+                ? const Center(child: CircularProgressIndicator(color: StitchColors.primary))
                 : _errorMessage != null
                     ? Center(
                         child: Padding(
@@ -183,13 +180,13 @@ class _AllVetsScreenState extends State<AllVetsScreen> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Icon(Icons.error_outline, color: Colors.red, size: 48),
+                              const Icon(Icons.error_outline, color: StitchColors.error, size: 48),
                               const SizedBox(height: 12),
                               Text(_errorMessage!, textAlign: TextAlign.center),
                               const SizedBox(height: 16),
                               ElevatedButton(
                                 onPressed: _fetchVets,
-                                style: ElevatedButton.styleFrom(backgroundColor: primaryColor),
+                                style: ElevatedButton.styleFrom(backgroundColor: StitchColors.primary),
                                 child: const Text('Retry / دوبارہ کوشش کریں'),
                               ),
                             ],
@@ -205,13 +202,13 @@ class _AllVetsScreenState extends State<AllVetsScreen> {
                                 const SizedBox(height: 16),
                                 const Text(
                                   'No Vets Found / کوئی ڈاکٹر نہیں ملا',
-                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: StitchColors.onBackground),
                                 ),
                               ],
                             ),
                           )
                         : ListView.builder(
-                            padding: const EdgeInsets.all(16),
+                            padding: const EdgeInsets.all(20),
                             itemCount: _filteredVets.length,
                             itemBuilder: (context, index) {
                               final vet = _filteredVets[index];
@@ -226,10 +223,9 @@ class _AllVetsScreenState extends State<AllVetsScreen> {
                               return Card(
                                 margin: const EdgeInsets.only(bottom: 16),
                                 elevation: 0,
-                                color: Colors.white,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16),
-                                  side: BorderSide(color: Colors.grey.shade200),
+                                  side: const BorderSide(color: StitchColors.surfaceContainerHigh, width: 1.5),
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(16),
@@ -240,12 +236,12 @@ class _AllVetsScreenState extends State<AllVetsScreen> {
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           CircleAvatar(
-                                            backgroundColor: const Color(0xFFE8F5E9),
+                                            backgroundColor: StitchColors.primary.withOpacity(0.08),
                                             radius: 28,
                                             child: Icon(
                                               Icons.person,
                                               size: 32,
-                                              color: isAvailable ? primaryColor : Colors.grey,
+                                              color: isAvailable ? StitchColors.primary : Colors.grey,
                                             ),
                                           ),
                                           const SizedBox(width: 12),
@@ -261,21 +257,22 @@ class _AllVetsScreenState extends State<AllVetsScreen> {
                                                         style: const TextStyle(
                                                           fontWeight: FontWeight.bold,
                                                           fontSize: 16,
+                                                          color: StitchColors.onBackground,
                                                         ),
                                                       ),
                                                     ),
                                                     Container(
                                                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                                       decoration: BoxDecoration(
-                                                        color: isAvailable ? const Color(0xFFE8F5E9) : Colors.red.shade50,
+                                                        color: isAvailable ? StitchColors.primary.withOpacity(0.12) : Colors.red.shade50,
                                                         borderRadius: BorderRadius.circular(8),
                                                       ),
                                                       child: Text(
                                                         isAvailable ? 'Available' : 'Busy',
                                                         style: TextStyle(
-                                                          fontSize: 11,
+                                                          fontSize: 10,
                                                           fontWeight: FontWeight.bold,
-                                                          color: isAvailable ? primaryColor : Colors.red,
+                                                          color: isAvailable ? StitchColors.primary : Colors.red,
                                                         ),
                                                       ),
                                                     ),
@@ -288,7 +285,7 @@ class _AllVetsScreenState extends State<AllVetsScreen> {
                                                     const SizedBox(width: 6),
                                                     Text(
                                                       rating.toString(),
-                                                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                                                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: StitchColors.onBackground),
                                                     ),
                                                   ],
                                                 ),
@@ -311,7 +308,7 @@ class _AllVetsScreenState extends State<AllVetsScreen> {
                                           const SizedBox(width: 4),
                                           Text(
                                             'Rs $fee',
-                                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: StitchColors.onBackground),
                                           ),
                                         ],
                                       ),
@@ -323,12 +320,12 @@ class _AllVetsScreenState extends State<AllVetsScreen> {
                                             .map((spec) => Container(
                                                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                                   decoration: BoxDecoration(
-                                                    color: Colors.grey.shade100,
+                                                    color: StitchColors.surfaceContainer,
                                                     borderRadius: BorderRadius.circular(6),
                                                   ),
                                                   child: Text(
                                                     spec.toString(),
-                                                    style: TextStyle(fontSize: 11, color: Colors.grey.shade700),
+                                                    style: TextStyle(fontSize: 11, color: Colors.grey.shade700, fontWeight: FontWeight.w500),
                                                   ),
                                                 ))
                                             .toList(),
@@ -358,8 +355,8 @@ class _AllVetsScreenState extends State<AllVetsScreen> {
                                               style: ElevatedButton.styleFrom(
                                                 backgroundColor: Colors.green,
                                                 foregroundColor: Colors.white,
-                                                padding: const EdgeInsets.symmetric(vertical: 10),
-                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                                               ),
                                             ),
                                           ),
@@ -374,10 +371,10 @@ class _AllVetsScreenState extends State<AllVetsScreen> {
                                               icon: const Icon(Icons.phone, size: 16),
                                               label: const Text('Call'),
                                               style: ElevatedButton.styleFrom(
-                                                backgroundColor: Colors.blue,
+                                                backgroundColor: StitchColors.secondary,
                                                 foregroundColor: Colors.white,
-                                                padding: const EdgeInsets.symmetric(vertical: 10),
-                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                                               ),
                                             ),
                                           ),
@@ -400,10 +397,10 @@ class _AllVetsScreenState extends State<AllVetsScreen> {
                                                 );
                                               },
                                               style: OutlinedButton.styleFrom(
-                                                foregroundColor: primaryColor,
-                                                side: const BorderSide(color: primaryColor),
-                                                padding: const EdgeInsets.symmetric(vertical: 10),
-                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                                foregroundColor: StitchColors.primary,
+                                                side: const BorderSide(color: StitchColors.primary, width: 1.5),
+                                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                                               ),
                                               child: const Text('Select'),
                                             ),
@@ -427,7 +424,7 @@ class _AllVetsScreenState extends State<AllVetsScreen> {
     return GestureDetector(
       onTap: () => _onProvinceSelected(value),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
           color: isSelected ? Colors.white : Colors.white.withOpacity(0.15),
           borderRadius: BorderRadius.circular(20),
@@ -435,7 +432,7 @@ class _AllVetsScreenState extends State<AllVetsScreen> {
         child: Text(
           label,
           style: TextStyle(
-            color: isSelected ? primaryColor : Colors.white,
+            color: isSelected ? StitchColors.primary : Colors.white,
             fontWeight: FontWeight.bold,
             fontSize: 12,
           ),

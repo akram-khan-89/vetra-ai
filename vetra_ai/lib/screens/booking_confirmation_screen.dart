@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import '../theme/stitch_theme.dart';
 import 'home_screen.dart';
 
 class BookingConfirmationScreen extends StatefulWidget {
@@ -81,11 +82,13 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
     final totalFee = pricing['total_rs'] ?? 1000;
 
     return Scaffold(
+      backgroundColor: StitchColors.background,
       appBar: AppBar(
-        title: const Text('Booking Confirmation'),
-        backgroundColor: const Color(0xFF0F6E56),
+        title: const Text('Booking Confirmation / بکنگ کی تصدیق'),
+        backgroundColor: StitchColors.primary,
         foregroundColor: Colors.white,
         automaticallyImplyLeading: false, // Prevent going back
+        elevation: 0,
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
@@ -95,22 +98,23 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
           children: [
             const Spacer(),
 
-            // Animated Green Checkmark
+            // Animated Green Checkmark with premium ring outline
             Center(
               child: AnimatedOpacity(
                 opacity: _opacity,
                 duration: const Duration(milliseconds: 1000),
                 curve: Curves.easeIn,
                 child: Container(
-                  width: 100,
-                  height: 100,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFE8F5E9),
+                  width: 110,
+                  height: 110,
+                  decoration: BoxDecoration(
+                    color: StitchColors.primary.withOpacity(0.08),
                     shape: BoxShape.circle,
+                    border: Border.all(color: StitchColors.primary.withOpacity(0.2), width: 3),
                   ),
                   child: const Icon(
                     Icons.check_circle,
-                    color: Colors.green,
+                    color: StitchColors.primary,
                     size: 80,
                   ),
                 ),
@@ -118,59 +122,69 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
             ),
             const SizedBox(height: 24),
 
-            // Success Text in Urdu
+            // Success Text in Urdu & English
             Text(
               '$vetName نے آپ کی request قبول کر لی',
               textAlign: TextAlign.center,
               style: const TextStyle(
-                fontSize: 22,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF0F6E56),
+                color: StitchColors.primary,
               ),
             ),
             const SizedBox(height: 32),
 
             // Appointment Card
-            Card(
-              elevation: 3,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: StitchColors.surfaceContainerHigh, width: 1.5),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.015),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
+                    const Row(
                       children: [
-                        const Icon(Icons.event, color: Color(0xFF0F6E56)),
-                        const SizedBox(width: 8),
-                        const Text(
-                          'Appointment Details',
+                        Icon(Icons.event, color: StitchColors.primary),
+                        SizedBox(width: 8),
+                        Text(
+                          'Appointment Details / تفاصیل',
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 15,
                             fontWeight: FontWeight.bold,
                             color: Colors.grey,
                           ),
                         ),
                       ],
                     ),
-                    const Divider(height: 24),
+                    const Divider(height: 28),
                     const Text(
-                      'Scheduled Time:',
-                      style: TextStyle(fontSize: 14, color: Colors.grey),
+                      'Scheduled Time / مقررہ وقت:',
+                      style: TextStyle(fontSize: 13, color: Colors.grey, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       timeStr,
                       style: const TextStyle(
-                        fontSize: 18,
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black87,
+                        color: StitchColors.onBackground,
                       ),
                     ),
                     const SizedBox(height: 16),
                     const Text(
-                      'Estimated Fee:',
-                      style: TextStyle(fontSize: 14, color: Colors.grey),
+                      'Estimated Fee / تخمینہ فیس:',
+                      style: TextStyle(fontSize: 13, color: Colors.grey, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -178,7 +192,7 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
                       style: const TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF0F6E56),
+                        color: StitchColors.primary,
                       ),
                     ),
                   ],
@@ -191,9 +205,9 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: Colors.grey.shade100,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.grey.shade300),
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: StitchColors.surfaceContainerHigh, width: 1.5),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -204,7 +218,7 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
                       SizedBox(width: 12),
                       Text(
                         'Appointment Reminder',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: StitchColors.onBackground),
                       ),
                     ],
                   ),
@@ -215,7 +229,8 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
                         _reminderOn = true; // Always stays on
                       });
                     },
-                    activeThumbColor: const Color(0xFF0F6E56),
+                    activeColor: Colors.white,
+                    activeTrackColor: StitchColors.primary,
                   ),
                 ],
               ),
@@ -224,23 +239,25 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
             const Spacer(),
 
             // "Done" Button
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HomeScreen()),
-                  (route) => false,
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF0F6E56),
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              ),
-              child: const Text(
-                'Done',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            SizedBox(
+              height: 54,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HomeScreen()),
+                    (route) => false,
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: StitchColors.primary,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                ),
+                child: const Text(
+                  'Done / مکمل',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ],

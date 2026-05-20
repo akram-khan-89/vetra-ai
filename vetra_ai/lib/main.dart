@@ -126,6 +126,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'firebase_options.dart';
 import 'screens/home_screen.dart';
 import 'screens/onboarding_screen.dart';
+import 'theme/stitch_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -151,13 +152,9 @@ class VetraApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Vetra AI',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF0F6E56),  // Vetra green
-        ),
-        useMaterial3: true,
-      ),
+      theme: StitchTheme.lightTheme,
       home: isLoggedIn ? const HomeScreen() : const OnboardingScreen(),
     );
   }
 }
+

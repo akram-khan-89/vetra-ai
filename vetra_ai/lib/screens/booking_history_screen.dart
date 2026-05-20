@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import '../theme/stitch_theme.dart';
 
 class BookingHistoryScreen extends StatefulWidget {
   const BookingHistoryScreen({super.key});
@@ -12,7 +13,6 @@ class BookingHistoryScreen extends StatefulWidget {
 class _BookingHistoryScreenState extends State<BookingHistoryScreen> {
   bool _isLoading = true;
   List<Map<String, dynamic>> bookingHistory = [];
-  static const Color primaryColor = Color(0xFF0F6E56);
 
   @override
   void initState() {
@@ -40,18 +40,12 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F9F6),
-      appBar: AppBar(
-        title: const Text('Booking History / بکنگ کی تاریخ'),
-        backgroundColor: primaryColor,
-        foregroundColor: Colors.white,
-        elevation: 0,
-      ),
+      backgroundColor: StitchColors.background,
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator(color: primaryColor))
+          ? const Center(child: CircularProgressIndicator(color: StitchColors.primary))
           : RefreshIndicator(
               onRefresh: _loadBookingHistory,
-              color: primaryColor,
+              color: StitchColors.primary,
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 child: Padding(
@@ -64,7 +58,7 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen> {
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: primaryColor,
+                          color: StitchColors.primary,
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -75,10 +69,10 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen> {
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: Colors.grey.shade200),
+                            border: Border.all(color: StitchColors.surfaceContainer),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.02),
+                                color: Colors.black.withOpacity(0.015),
                                 blurRadius: 10,
                                 offset: const Offset(0, 4),
                               ),
@@ -91,7 +85,7 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen> {
                               const SizedBox(height: 16),
                               const Text(
                                 'No Bookings Yet / ابھی تک کوئی بکنگ نہیں ہے',
-                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
+                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: StitchColors.onBackground),
                                 textAlign: TextAlign.center,
                               ),
                               const SizedBox(height: 8),
@@ -119,7 +113,7 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen> {
                               margin: const EdgeInsets.only(bottom: 16),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(16),
-                                side: BorderSide(color: Colors.grey.shade200),
+                                side: const BorderSide(color: StitchColors.surfaceContainerHigh, width: 1),
                               ),
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -128,10 +122,10 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen> {
                                     Container(
                                       padding: const EdgeInsets.all(12),
                                       decoration: BoxDecoration(
-                                        color: const Color(0xFFE8F5E9),
+                                        color: StitchColors.primary.withOpacity(0.08),
                                         borderRadius: BorderRadius.circular(14),
                                       ),
-                                      child: const Icon(Icons.vaccines, color: primaryColor, size: 30),
+                                      child: const Icon(Icons.vaccines, color: StitchColors.primary, size: 30),
                                     ),
                                     const SizedBox(width: 16),
                                     Expanded(
@@ -140,7 +134,7 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen> {
                                         children: [
                                           Text(
                                             vetName,
-                                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black87),
+                                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: StitchColors.onBackground),
                                           ),
                                           const SizedBox(height: 6),
                                           Row(
@@ -167,13 +161,13 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen> {
                                         Container(
                                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                                           decoration: BoxDecoration(
-                                            color: const Color(0xFFE8F5E9),
+                                            color: StitchColors.primary.withOpacity(0.12),
                                             borderRadius: BorderRadius.circular(10),
                                           ),
                                           child: const Text(
                                             'Confirmed / طے شدہ',
                                             style: TextStyle(
-                                              color: primaryColor,
+                                              color: StitchColors.primary,
                                               fontWeight: FontWeight.bold,
                                               fontSize: 11,
                                             ),
@@ -182,7 +176,7 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen> {
                                         const SizedBox(height: 8),
                                         Text(
                                           'Rs $fee',
-                                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.black87),
+                                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: StitchColors.onBackground),
                                         ),
                                       ],
                                     ),

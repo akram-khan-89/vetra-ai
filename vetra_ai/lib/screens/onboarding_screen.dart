@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/stitch_theme.dart';
 import 'login_screen.dart';
 
 class OnboardingScreen extends StatelessWidget {
@@ -22,9 +23,9 @@ class OnboardingScreen extends StatelessWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.white.withValues(alpha: 0.6),
-                  Colors.white.withValues(alpha: 0.1),
-                  Colors.black.withValues(alpha: 0.6),
+                  Colors.white.withOpacity(0.5),
+                  Colors.black.withOpacity(0.3),
+                  Colors.black.withOpacity(0.85),
                 ],
                 stops: const [0.0, 0.4, 1.0],
               ),
@@ -37,25 +38,25 @@ class OnboardingScreen extends StatelessWidget {
               child: Column(
                 children: [
                   const SizedBox(height: 40),
-                  // Logo
+                  // Logo Container styled in Stitch primary color
                   Container(
                     width: 80,
                     height: 80,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF154212),
-                      borderRadius: BorderRadius.circular(16),
+                      color: StitchColors.primary,
+                      borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.2),
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
+                          color: Colors.black.withOpacity(0.3),
+                          blurRadius: 12,
+                          offset: const Offset(0, 6),
                         ),
                       ],
                     ),
                     child: const Center(
                       child: Icon(
                         Icons.agriculture,
-                        size: 48,
+                        size: 44,
                         color: Colors.white,
                       ),
                     ),
@@ -65,9 +66,10 @@ class OnboardingScreen extends StatelessWidget {
                   const Text(
                     'Vetra AI',
                     style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF1A1C1B),
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      letterSpacing: 0.5,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -76,31 +78,33 @@ class OnboardingScreen extends StatelessWidget {
                     'Your AI Livestock Assistant',
                     style: TextStyle(
                       fontSize: 18,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xFF42493E),
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white70,
                     ),
                   ),
                   const Spacer(),
-                  // Info Cards
+                  // Premium Semi-Transparent Info Cards
                   Row(
                     children: [
                       Expanded(
                         child: Container(
-                          padding: const EdgeInsets.all(16),
+                          padding: const EdgeInsets.all(18),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFF4F4F1),
-                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.white.withOpacity(0.12),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: Colors.white.withOpacity(0.2)),
                           ),
-                          child: const Column(
+                          child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Icon(Icons.bar_chart, color: Color(0xFF154212)),
+                            children: const [
+                              Icon(Icons.bar_chart, color: Colors.white, size: 28),
                               SizedBox(height: 16),
                               Text(
                                 'Health Metrics',
                                 style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: Color(0xFF1A1C1B),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                  color: Colors.white,
                                 ),
                               ),
                             ],
@@ -110,21 +114,23 @@ class OnboardingScreen extends StatelessWidget {
                       const SizedBox(width: 16),
                       Expanded(
                         child: Container(
-                          padding: const EdgeInsets.all(16),
+                          padding: const EdgeInsets.all(18),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFF4F4F1),
-                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.white.withOpacity(0.12),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: Colors.white.withOpacity(0.2)),
                           ),
-                          child: const Column(
+                          child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Icon(Icons.bolt, color: Color(0xFF154212)),
+                            children: const [
+                              Icon(Icons.bolt, color: Colors.white, size: 28),
                               SizedBox(height: 16),
                               Text(
                                 'Instant Alerts',
                                 style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: Color(0xFF1A1C1B),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                  color: Colors.white,
                                 ),
                               ),
                             ],
@@ -133,7 +139,7 @@ class OnboardingScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 32),
                   // Get Started Button
                   ElevatedButton(
                     onPressed: () {
@@ -146,9 +152,10 @@ class OnboardingScreen extends StatelessWidget {
                     },
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size(double.infinity, 56),
-                      backgroundColor: const Color(0xFF154212),
+                      backgroundColor: StitchColors.primary,
+                      foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(16),
                       ),
                     ),
                     child: const Row(
@@ -156,10 +163,10 @@ class OnboardingScreen extends StatelessWidget {
                       children: [
                         Text(
                           'Get Started',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                         SizedBox(width: 8),
-                        Icon(Icons.arrow_forward),
+                        Icon(Icons.arrow_forward, size: 20),
                       ],
                     ),
                   ),
@@ -177,9 +184,10 @@ class OnboardingScreen extends StatelessWidget {
                     child: const Text(
                       'Sign In to Account',
                       style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
                         color: Colors.white70,
+                        decoration: TextDecoration.underline,
                       ),
                     ),
                   ),

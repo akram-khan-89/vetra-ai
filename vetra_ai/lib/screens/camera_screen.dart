@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../services/api_service.dart';
+import '../theme/stitch_theme.dart';
 import 'diagnosis_screen.dart';
 
 class CameraScreen extends StatefulWidget {
@@ -58,10 +59,16 @@ class _CameraScreenState extends State<CameraScreen> {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('Image Quality'),
-        content: const Text('Photo unclear. Please retake in daylight.'),
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Text('Image Quality / تصویر کا معیار', style: TextStyle(color: StitchColors.primary, fontWeight: FontWeight.bold)),
+        content: const Text('Photo unclear. Please retake in daylight.\nتصویر صاف نہیں ہے۔ براہ کرم دن کی روشنی میں دوبارہ تصویر لیں۔'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('OK')),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK', style: TextStyle(color: StitchColors.primary, fontWeight: FontWeight.bold)),
+          ),
         ],
       ),
     );
@@ -82,20 +89,21 @@ class _CameraScreenState extends State<CameraScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: StitchColors.background,
       appBar: AppBar(
-        title: const Text('Photo Analysis', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-        backgroundColor: const Color(0xFF0F6E56),
+        title: const Text('Photo Analysis / تصویر کا تجزیہ', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        backgroundColor: StitchColors.primary,
         iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
       ),
       body: _isLoading
-          ? Center(
+          ? const Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  CircularProgressIndicator(color: Color(0xFF0F6E56)),
+                children: [
+                  CircularProgressIndicator(color: StitchColors.primary),
                   SizedBox(height: 16),
-                  Text('Analyzing image...', style: TextStyle(fontSize: 16, color: Colors.grey)),
+                  Text('Analyzing image... / تصویر کا تجزیہ ہو رہا ہے...', style: TextStyle(fontSize: 15, color: Colors.grey, fontWeight: FontWeight.w500)),
                 ],
               ),
             )
@@ -105,8 +113,8 @@ class _CameraScreenState extends State<CameraScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const Text(
-                    'Upload a clear photo of the animal to help identify symptoms and physical conditions.',
-                    style: TextStyle(fontSize: 16, color: Colors.black87, height: 1.4),
+                    'Upload a clear photo of the animal to help identify symptoms and physical conditions.\nجانور کی واضح تصویر اپ لوڈ کریں تاکہ بیماری کی علامات کو آسانی سے پہچانا جا سکے۔',
+                    style: TextStyle(fontSize: 14, color: Colors.black87, height: 1.5, fontWeight: FontWeight.w500),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 24),
@@ -115,9 +123,16 @@ class _CameraScreenState extends State<CameraScreen> {
                   Container(
                     height: 260,
                     decoration: BoxDecoration(
-                      color: Colors.grey[100],
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.grey[300]!, width: 2),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: StitchColors.surfaceContainerHigh, width: 2),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.015),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
                     clipBehavior: Clip.antiAlias,
                     child: _selectedImage != null
@@ -125,9 +140,16 @@ class _CameraScreenState extends State<CameraScreen> {
                         : Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.add_a_photo_outlined, size: 64, color: Colors.grey[400]),
+                              Container(
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: StitchColors.primary.withOpacity(0.08),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(Icons.add_a_photo_outlined, size: 48, color: StitchColors.primary),
+                              ),
                               const SizedBox(height: 16),
-                              Text('No image selected', style: TextStyle(color: Colors.grey[500], fontSize: 16, fontWeight: FontWeight.w500)),
+                              const Text('No image selected / کوئی تصویر منتخب نہیں کی گئی', style: TextStyle(color: Colors.grey, fontSize: 14, fontWeight: FontWeight.bold)),
                             ],
                           ),
                   ),
@@ -142,9 +164,9 @@ class _CameraScreenState extends State<CameraScreen> {
                           label: const Text('Camera', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
                           onPressed: () => _pickImage(ImageSource.camera),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF0F6E56),
+                            backgroundColor: StitchColors.primary,
                             padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                             elevation: 0,
                           ),
                         ),
@@ -152,13 +174,13 @@ class _CameraScreenState extends State<CameraScreen> {
                       const SizedBox(width: 16),
                       Expanded(
                         child: OutlinedButton.icon(
-                          icon: const Icon(Icons.photo_library, color: Color(0xFF0F6E56)),
-                          label: const Text('Gallery', style: TextStyle(color: Color(0xFF0F6E56), fontSize: 16, fontWeight: FontWeight.bold)),
+                          icon: const Icon(Icons.photo_library, color: StitchColors.primary),
+                          label: const Text('Gallery', style: TextStyle(color: StitchColors.primary, fontSize: 16, fontWeight: FontWeight.bold)),
                           onPressed: () => _pickImage(ImageSource.gallery),
                           style: OutlinedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 16),
-                            side: const BorderSide(color: Color(0xFF0F6E56), width: 2),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            side: const BorderSide(color: StitchColors.primary, width: 2),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                           ),
                         ),
                       ),
@@ -170,28 +192,29 @@ class _CameraScreenState extends State<CameraScreen> {
                     const SizedBox(height: 32),
                     const Divider(),
                     const SizedBox(height: 24),
-                    const Text('Detected Findings', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                    const Text('Detected Findings / علامات ملی ہیں', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: StitchColors.onBackground)),
                     const SizedBox(height: 16),
                     Wrap(
                       spacing: 8,
                       runSpacing: 8,
                       children: _visualFindings.map((f) => Chip(
-                        label: Text(f, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
-                        backgroundColor: const Color(0xFF1B8A6B),
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8), side: BorderSide.none),
+                        label: Text(f, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)),
+                        backgroundColor: StitchColors.secondary,
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        side: BorderSide.none,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                       )).toList(),
                     ),
                     const SizedBox(height: 32),
                     ElevatedButton(
                       onPressed: _continue,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF0F6E56),
+                        backgroundColor: StitchColors.primary,
                         padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                         elevation: 2,
                       ),
-                      child: const Text('Continue with Findings', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+                      child: const Text('Continue with Findings / نتائج کے ساتھ جاری رکھیں', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
                     ),
                   ],
                 ],

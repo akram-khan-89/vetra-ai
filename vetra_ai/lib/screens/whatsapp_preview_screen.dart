@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../services/api_service.dart';
+import '../theme/stitch_theme.dart';
 import 'booking_confirmation_screen.dart';
 
 class WhatsAppPreviewScreen extends StatefulWidget {
@@ -132,10 +133,12 @@ class _WhatsAppPreviewScreenState extends State<WhatsAppPreviewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: StitchColors.background,
       appBar: AppBar(
-        title: const Text('WhatsApp Message Preview'),
-        backgroundColor: const Color(0xFF0F6E56),
+        title: const Text('Message Preview / پیغام کا پیش نظارہ'),
+        backgroundColor: StitchColors.primary,
         foregroundColor: Colors.white,
+        elevation: 0,
       ),
       body: _isLoading
           ? const Center(
@@ -143,10 +146,10 @@ class _WhatsAppPreviewScreenState extends State<WhatsAppPreviewScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF0F6E56)),
+                    valueColor: AlwaysStoppedAnimation<Color>(StitchColors.primary),
                   ),
                   SizedBox(height: 16),
-                  Text('Preparing message content...'),
+                  Text('Preparing message content... / پیغام تیار ہو رہا ہے...', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w500)),
                 ],
               ),
             )
@@ -155,12 +158,13 @@ class _WhatsAppPreviewScreenState extends State<WhatsAppPreviewScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.error_outline, size: 60, color: Colors.red),
+                      const Icon(Icons.error_outline, size: 60, color: StitchColors.error),
                       const SizedBox(height: 16),
                       Text('Error: $_errorMessage'),
                       const SizedBox(height: 16),
                       ElevatedButton(
                         onPressed: _fetchWhatsAppDetails,
+                        style: ElevatedButton.styleFrom(backgroundColor: StitchColors.primary),
                         child: const Text('Retry'),
                       ),
                     ],
@@ -172,15 +176,15 @@ class _WhatsAppPreviewScreenState extends State<WhatsAppPreviewScreen> {
 
   Widget _buildContent() {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(24.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
             'To: Dr. ${widget.vet['name'] ?? 'Vet'}',
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: StitchColors.primary),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
 
           // Outgoing message chat bubble container
           Expanded(
@@ -190,21 +194,22 @@ class _WhatsAppPreviewScreenState extends State<WhatsAppPreviewScreen> {
                 children: [
                   // WhatsApp Outgoing Chat Bubble
                   Container(
-                    margin: const EdgeInsets.only(left: 40.0, bottom: 12.0),
-                    padding: const EdgeInsets.all(12.0),
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFD9FDD3), // WhatsApp Outgoing Bubble Color
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(12),
-                        topRight: Radius.circular(12),
-                        bottomLeft: Radius.circular(12),
+                    margin: const EdgeInsets.only(left: 40.0, bottom: 16.0),
+                    padding: const EdgeInsets.all(16.0),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFD9FDD3), // WhatsApp Outgoing Bubble Color
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(16),
+                        topRight: Radius.circular(16),
+                        bottomLeft: Radius.circular(16),
                         bottomRight: Radius.circular(0),
                       ),
+                      border: Border.all(color: Colors.green.shade100, width: 1),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black12,
-                          offset: Offset(0, 1),
-                          blurRadius: 1,
+                          color: Colors.black.withOpacity(0.03),
+                          offset: const Offset(0, 2),
+                          blurRadius: 4,
                         ),
                       ],
                     ),
@@ -217,18 +222,20 @@ class _WhatsAppPreviewScreenState extends State<WhatsAppPreviewScreen> {
                           style: const TextStyle(
                             fontSize: 16,
                             color: Colors.black87,
-                            height: 1.4,
+                            height: 1.5,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
-                        const SizedBox(height: 4),
+                        const SizedBox(height: 8),
                         const Align(
                           alignment: Alignment.bottomRight,
                           child: Text(
-                            'Vetra AI Agent',
+                            'Vetra AI Agent / ویٹرا اے آئی ایجنٹ',
                             style: TextStyle(
                               fontSize: 10,
                               color: Colors.grey,
                               fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
@@ -238,21 +245,22 @@ class _WhatsAppPreviewScreenState extends State<WhatsAppPreviewScreen> {
 
                   // Photo thumbnail
                   Container(
-                    margin: const EdgeInsets.only(bottom: 16.0),
+                    margin: const EdgeInsets.only(bottom: 20.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         const Text(
-                          'جانور کی تصویر: ',
-                          style: TextStyle(fontSize: 14, color: Colors.grey),
+                          'Animal Photo / جانور کی تصویر: ',
+                          style: TextStyle(fontSize: 13, color: Colors.grey, fontWeight: FontWeight.bold),
                         ),
+                        const SizedBox(width: 8),
                         Container(
                           width: 80,
                           height: 80,
                           decoration: BoxDecoration(
-                            color: Colors.grey.shade300,
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: Colors.grey.shade400),
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: StitchColors.surfaceContainerHigh, width: 1.5),
                           ),
                           clipBehavior: Clip.antiAlias,
                           child: (widget.diagnosis['image_path'] != null &&
@@ -280,13 +288,14 @@ class _WhatsAppPreviewScreenState extends State<WhatsAppPreviewScreen> {
           // Send via WhatsApp Button
           ElevatedButton.icon(
             onPressed: () => _createBookingAndNavigate(launchWhatsApp: true),
-            icon: const Icon(Icons.send),
-            label: const Text('Send via WhatsApp'),
+            icon: const Icon(Icons.send, color: Colors.white),
+            label: const Text('Send via WhatsApp / واٹس ایپ پر بھیجیں'),
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green,
+              backgroundColor: Colors.green.shade600,
               foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              elevation: 2,
             ),
           ),
           const SizedBox(height: 12),
@@ -295,12 +304,12 @@ class _WhatsAppPreviewScreenState extends State<WhatsAppPreviewScreen> {
           OutlinedButton(
             onPressed: () => _createBookingAndNavigate(launchWhatsApp: false),
             style: OutlinedButton.styleFrom(
-              foregroundColor: const Color(0xFF0F6E56),
-              side: const BorderSide(color: Color(0xFF0F6E56)),
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              foregroundColor: StitchColors.primary,
+              side: const BorderSide(color: StitchColors.primary, width: 1.5),
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             ),
-            child: const Text('Book without WhatsApp'),
+            child: const Text('Book without WhatsApp / واٹس ایپ کے بغیر بک کریں', style: TextStyle(fontWeight: FontWeight.bold)),
           ),
         ],
       ),

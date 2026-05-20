@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
+import '../theme/stitch_theme.dart';
 import 'whatsapp_preview_screen.dart';
 
 class PricingScreen extends StatefulWidget {
@@ -62,24 +63,26 @@ class _PricingScreenState extends State<PricingScreen> {
 
   Widget _buildItemRow(String label, String value, {bool isDiscount = false, bool isBold = false}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             label,
             style: TextStyle(
-              fontSize: 16,
-              fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-              color: Colors.black87,
+              fontSize: 15,
+              fontWeight: isBold ? FontWeight.bold : FontWeight.w500,
+              color: StitchColors.onBackground,
             ),
           ),
           Text(
             value,
             style: TextStyle(
-              fontSize: 16,
-              fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-              color: isDiscount ? Colors.red : (isBold ? const Color(0xFF0F6E56) : Colors.black87),
+              fontSize: 15,
+              fontWeight: isBold ? FontWeight.bold : FontWeight.w600,
+              color: isDiscount
+                  ? StitchColors.error
+                  : (isBold ? StitchColors.primary : StitchColors.onBackground),
             ),
           ),
         ],
@@ -90,10 +93,12 @@ class _PricingScreenState extends State<PricingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: StitchColors.background,
       appBar: AppBar(
-        title: const Text('Pricing Details'),
-        backgroundColor: const Color(0xFF0F6E56),
+        title: const Text('Pricing Details / فیس کی تفصیلات'),
+        backgroundColor: StitchColors.primary,
         foregroundColor: Colors.white,
+        elevation: 0,
       ),
       body: _isLoading
           ? const Center(
@@ -101,10 +106,10 @@ class _PricingScreenState extends State<PricingScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF0F6E56)),
+                    valueColor: AlwaysStoppedAnimation<Color>(StitchColors.primary),
                   ),
                   SizedBox(height: 16),
-                  Text('Calculating visit fee breakdown...'),
+                  Text('Calculating visit fee... / فیس کا حساب لگایا جا رہا ہے...', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w500)),
                 ],
               ),
             )
@@ -113,12 +118,13 @@ class _PricingScreenState extends State<PricingScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.error_outline, size: 60, color: Colors.red),
+                      const Icon(Icons.error_outline, size: 60, color: StitchColors.error),
                       const SizedBox(height: 16),
                       Text('Error: $_errorMessage'),
                       const SizedBox(height: 16),
                       ElevatedButton(
                         onPressed: _fetchPricing,
+                        style: ElevatedButton.styleFrom(backgroundColor: StitchColors.primary),
                         child: const Text('Retry'),
                       ),
                     ],
@@ -145,36 +151,114 @@ class _PricingScreenState extends State<PricingScreen> {
     final distance = (widget.vet['distance_km'] as num?)?.toDouble() ?? 8.0;
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(24.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Vet header info
-          Card(
-            color: const Color(0xFF0F6E56).withValues(alpha: 0.05),
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-              side: BorderSide(color: const Color(0xFF0F6E56).withValues(alpha: 0.2)),
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: StitchColors.primary.withOpacity(0.08),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: StitchColors.primary.withOpacity(0.15), width: 1.5),
             ),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.person, size: 36, color: StitchColors.primary),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.vet['name'] ?? 'Unknown Vet',
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: StitchColors.primary),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '${(widget.vet['specialties'] as List<dynamic>?)?.join(", ") ?? "General"} Specialty',
+                        style: TextStyle(color: Colors.grey.shade700, fontWeight: FontWeight.w500, fontSize: 13),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 28),
+
+          // Breakdown Card
+          const Text(
+            'Visit Fee Breakdown / فیس کی تفصیل',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: StitchColors.onBackground),
+          ),
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: StitchColors.surfaceContainerHigh, width: 1.5),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.015),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                _buildItemRow('Base visit fee', 'Rs $baseFee'),
+                _buildItemRow('Travel (${distance.toStringAsFixed(1)}km × Rs 30)', 'Rs $travelFee'),
+                if (urgencyFee > 0) _buildItemRow('Urgency surcharge', 'Rs $urgencyFee'),
+                if (complexityFee > 0) _buildItemRow('Complexity fee', 'Rs $complexityFee'),
+                if (nightFee > 0) _buildItemRow('Night surcharge', 'Rs $nightFee'),
+                if (discount > 0) _buildItemRow('Loyalty discount (10%)', '− Rs $discount', isDiscount: true),
+                const Divider(height: 28, thickness: 1.5),
+                _buildItemRow('Total / کل فیس', 'Rs $total', isBold: true),
+              ],
+            ),
+          ),
+          const SizedBox(height: 24),
+
+          // Budget alternative alert
+          if (budgetAlt != null) ...[
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.amber.shade50,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: Colors.amber.shade300, width: 1.5),
+              ),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.person, size: 40, color: Color(0xFF0F6E56)),
+                  Icon(Icons.lightbulb_outline, color: Colors.amber.shade800),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          widget.vet['name'] ?? 'Unknown Vet',
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          'Budget Option Available / سستا متبادل',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.amber.shade900,
+                          ),
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          '${(widget.vet['specialties'] as List<dynamic>?)?.join(", ") ?? "General"} Specialty',
-                          style: TextStyle(color: Colors.grey.shade600),
+                          'Cheaper option: ${budgetAlt['name'] ?? 'Alternative Vet'} → Rs ${budgetAlt['base_visit_fee_rs'] ?? 0}',
+                          style: TextStyle(color: Colors.amber.shade900, fontSize: 13, height: 1.4),
                         ),
                       ],
                     ),
@@ -182,83 +266,15 @@ class _PricingScreenState extends State<PricingScreen> {
                 ],
               ),
             ),
-          ),
-          const SizedBox(height: 24),
-
-          // Breakdown Card
-          const Text(
-            'Visit Fee Breakdown',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 12),
-          Card(
-            elevation: 2,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  _buildItemRow('Base visit fee', 'Rs $baseFee'),
-                  _buildItemRow('Travel (${distance.toStringAsFixed(1)}km × Rs 30)', 'Rs $travelFee'),
-                  if (urgencyFee > 0) _buildItemRow('Urgency surcharge', 'Rs $urgencyFee'),
-                  if (complexityFee > 0) _buildItemRow('Complexity fee', 'Rs $complexityFee'),
-                  if (nightFee > 0) _buildItemRow('Night surcharge', 'Rs $nightFee'),
-                  if (discount > 0) _buildItemRow('Loyalty discount (10%)', '− Rs $discount', isDiscount: true),
-                  const Divider(height: 24, thickness: 1.5),
-                  _buildItemRow('Total', 'Rs $total', isBold: true),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-
-          // Budget alternative alert
-          if (budgetAlt != null) ...[
-            Card(
-              color: Colors.amber.shade50,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-                side: BorderSide(color: Colors.amber.shade300),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(Icons.lightbulb_outline, color: Colors.amber.shade800),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Budget Option Available',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.amber.shade900,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Budget option: ${budgetAlt['name'] ?? 'Cheaper Vet'} → Rs ${budgetAlt['base_visit_fee_rs'] ?? 0}',
-                            style: TextStyle(color: Colors.amber.shade900),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
             const SizedBox(height: 24),
           ],
 
-          const SizedBox(height: 32),
+          const SizedBox(height: 16),
 
           // "Book This Vet" large green button
           SizedBox(
             width: double.infinity,
-            height: 50,
+            height: 54,
             child: ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -273,13 +289,13 @@ class _PricingScreenState extends State<PricingScreen> {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF0F6E56),
+                backgroundColor: StitchColors.primary,
                 foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               ),
               child: const Text(
-                'Book This Vet',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                'Book This Vet / ڈاکٹر بک کریں',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
           ),
@@ -288,4 +304,3 @@ class _PricingScreenState extends State<PricingScreen> {
     );
   }
 }
-

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
+import '../theme/stitch_theme.dart';
 import 'whatsapp_preview_screen.dart';
 import 'pricing_screen.dart';
 
@@ -131,11 +132,11 @@ class _VetListScreenState extends State<VetListScreen> {
 
     for (int i = 0; i < 5; i++) {
       if (i < fullStars) {
-        stars.add(const Icon(Icons.star, color: Colors.amber, size: 18));
+        stars.add(const Icon(Icons.star, color: Colors.amber, size: 16));
       } else if (i == fullStars && hasHalfStar) {
-        stars.add(const Icon(Icons.star_half, color: Colors.amber, size: 18));
+        stars.add(const Icon(Icons.star_half, color: Colors.amber, size: 16));
       } else {
-        stars.add(const Icon(Icons.star_border, color: Colors.amber, size: 18));
+        stars.add(const Icon(Icons.star_border, color: Colors.amber, size: 16));
       }
     }
 
@@ -155,13 +156,14 @@ class _VetListScreenState extends State<VetListScreen> {
     final fee = vet['base_visit_fee_rs'] ?? 'N/A';
 
     return Card(
-      elevation: isRecommended ? 6 : 2,
+      elevation: isRecommended ? 4 : 0,
       margin: const EdgeInsets.symmetric(vertical: 8),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: isRecommended
-            ? const BorderSide(color: Color(0xFF0F6E56), width: 2.5)
-            : BorderSide(color: Colors.grey.shade300, width: 1),
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(
+          color: isRecommended ? StitchColors.primary : StitchColors.surfaceContainerHigh,
+          width: isRecommended ? 2.5 : 1.5,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -171,29 +173,21 @@ class _VetListScreenState extends State<VetListScreen> {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: const BoxDecoration(
-                color: Color(0xFF0F6E56),
-                borderRadius: BorderRadius.vertical(top: Radius.circular(9)),
+                color: StitchColors.primary,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
               ),
               child: const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'تجویز کردہ', // Recommended in Urdu
+                    'تجویز کردہ / Recommended',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 18,
+                      fontSize: 14,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Text(
-                    'RECOMMENDED',
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1.2,
-                    ),
-                  ),
+                  Icon(Icons.stars, color: Colors.white, size: 18),
                 ],
               ),
             ),
@@ -213,9 +207,9 @@ class _VetListScreenState extends State<VetListScreen> {
                           Text(
                             name,
                             style: TextStyle(
-                              fontSize: isRecommended ? 20 : 18,
+                              fontSize: isRecommended ? 18 : 16,
                               fontWeight: FontWeight.bold,
-                              color: Colors.black87,
+                              color: StitchColors.onBackground,
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -224,9 +218,9 @@ class _VetListScreenState extends State<VetListScreen> {
                               _buildStars(rating),
                               const SizedBox(width: 8),
                               Text(
-                                  rating.toString(),
-                                  style: const TextStyle(fontWeight: FontWeight.bold),
-                                ),
+                                rating.toString(),
+                                style: const TextStyle(fontWeight: FontWeight.bold, color: StitchColors.onBackground, fontSize: 13),
+                              ),
                             ],
                           ),
                         ],
@@ -235,7 +229,7 @@ class _VetListScreenState extends State<VetListScreen> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                       decoration: BoxDecoration(
-                        color: isRecommended ? const Color(0xFF0F6E56).withOpacity(0.1) : Colors.grey.shade100,
+                        color: isRecommended ? StitchColors.primary.withOpacity(0.08) : StitchColors.surfaceContainer,
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Column(
@@ -247,9 +241,9 @@ class _VetListScreenState extends State<VetListScreen> {
                           Text(
                             '$score/100',
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 15,
                               fontWeight: FontWeight.bold,
-                              color: isRecommended ? const Color(0xFF0F6E56) : Colors.black87,
+                              color: isRecommended ? StitchColors.primary : StitchColors.onBackground,
                             ),
                           ),
                         ],
@@ -262,11 +256,11 @@ class _VetListScreenState extends State<VetListScreen> {
                   children: [
                     const Icon(Icons.location_on, size: 16, color: Colors.grey),
                     const SizedBox(width: 4),
-                    Text('$distance km away'),
+                    Text('$distance km away', style: const TextStyle(color: StitchColors.onBackground, fontSize: 13, fontWeight: FontWeight.w500)),
                     const SizedBox(width: 16),
                     const Icon(Icons.payments_outlined, size: 16, color: Colors.grey),
                     const SizedBox(width: 4),
-                    Text('Rs. $fee'),
+                    Text('Rs. $fee', style: const TextStyle(color: StitchColors.onBackground, fontSize: 13, fontWeight: FontWeight.bold)),
                   ],
                 ),
                 const SizedBox(height: 12),
@@ -274,14 +268,16 @@ class _VetListScreenState extends State<VetListScreen> {
                   spacing: 6,
                   runSpacing: 4,
                   children: specialties
-                      .map((spec) => Chip(
-                            label: Text(
-                              spec.toString(),
-                              style: const TextStyle(fontSize: 11),
+                      .map((spec) => Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: StitchColors.surfaceContainer,
+                              borderRadius: BorderRadius.circular(6),
                             ),
-                            padding: EdgeInsets.zero,
-                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            backgroundColor: Colors.grey.shade100,
+                            child: Text(
+                              spec.toString(),
+                              style: const TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.w500),
+                            ),
                           ))
                       .toList(),
                 ),
@@ -306,8 +302,8 @@ class _VetListScreenState extends State<VetListScreen> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
                       ),
                     ),
@@ -322,10 +318,10 @@ class _VetListScreenState extends State<VetListScreen> {
                         icon: const Icon(Icons.phone, size: 16),
                         label: const Text('Call'),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
+                          backgroundColor: StitchColors.secondary,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
                       ),
                     ),
@@ -344,10 +340,10 @@ class _VetListScreenState extends State<VetListScreen> {
                           );
                         },
                         style: OutlinedButton.styleFrom(
-                          foregroundColor: const Color(0xFF0F6E56),
-                          side: const BorderSide(color: Color(0xFF0F6E56)),
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          foregroundColor: StitchColors.primary,
+                          side: const BorderSide(color: StitchColors.primary, width: 1.5),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
                         child: const Text('Select'),
                       ),
@@ -373,25 +369,32 @@ class _VetListScreenState extends State<VetListScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const SizedBox(height: 40),
-          const Icon(
-            Icons.location_on,
-            size: 80,
-            color: Color(0xFF0F6E56),
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: StitchColors.primary.withOpacity(0.08),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.location_on,
+              size: 72,
+              color: StitchColors.primary,
+            ),
           ),
           const SizedBox(height: 24),
           const Text(
-            'Select Location\nمقام منتخب کریں',
+            'Select Location / مقام منتخب کریں',
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
-              color: Colors.black87,
+              color: StitchColors.onBackground,
             ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 12),
           Text(
-            'To connect you with the nearest veterinarian, please select your city and area.',
-            style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+            'To connect you with the nearest veterinarian, please select your city and area.\nقریبی معالج سے منسلک ہونے کے لیے اپنا شہر اور علاقہ منتخب کریں۔',
+            style: TextStyle(fontSize: 14, color: Colors.grey.shade600, height: 1.4),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 32),
@@ -401,12 +404,13 @@ class _VetListScreenState extends State<VetListScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey.shade300),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: StitchColors.surfaceContainerHigh, width: 1.5),
             ),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
                 value: _selectedCity,
+                dropdownColor: Colors.white,
                 hint: const Text('Select City / شہر منتخب کریں'),
                 isExpanded: true,
                 items: cities.map((city) {
@@ -431,12 +435,13 @@ class _VetListScreenState extends State<VetListScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             decoration: BoxDecoration(
               color: _selectedCity == null ? Colors.grey.shade100 : Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey.shade300),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: StitchColors.surfaceContainerHigh, width: 1.5),
             ),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
                 value: _selectedArea,
+                dropdownColor: Colors.white,
                 hint: Text(
                   _selectedCity == null
                       ? 'Select City First'
@@ -478,11 +483,11 @@ class _VetListScreenState extends State<VetListScreen> {
                     }
                   },
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF0F6E56),
+              backgroundColor: StitchColors.primary,
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(16),
               ),
               elevation: 2,
             ),
@@ -507,28 +512,29 @@ class _VetListScreenState extends State<VetListScreen> {
     final overrideReason = _decisionResult!['override_reason'] ?? '';
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(20.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Location banner
+          // Location banner styled beautifully
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
-              color: const Color(0xFF0F6E56).withOpacity(0.08),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFF0F6E56).withOpacity(0.2)),
+              color: StitchColors.primary.withOpacity(0.08),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: StitchColors.primary.withOpacity(0.2), width: 1.5),
             ),
             child: Row(
               children: [
-                const Icon(Icons.my_location, color: Color(0xFF0F6E56), size: 20),
+                const Icon(Icons.my_location, color: StitchColors.primary, size: 20),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     'Location: $_selectedArea, $_selectedCity',
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF0F6E56),
+                      color: StitchColors.primary,
+                      fontSize: 13,
                     ),
                   ),
                 ),
@@ -543,11 +549,11 @@ class _VetListScreenState extends State<VetListScreen> {
                     padding: EdgeInsets.zero,
                     minimumSize: Size.zero,
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    foregroundColor: const Color(0xFF0F6E56),
+                    foregroundColor: StitchColors.primary,
                   ),
                   child: const Text(
                     'Change / تبدیل کریں',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                   ),
                 ),
               ],
@@ -568,8 +574,8 @@ class _VetListScreenState extends State<VetListScreen> {
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: Colors.amber.shade50,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.amber.shade300),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.amber.shade300, width: 1.5),
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -592,13 +598,13 @@ class _VetListScreenState extends State<VetListScreen> {
             const SizedBox(height: 16),
           ],
           if (alternatives.isNotEmpty) ...[
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
             const Text(
-              'Alternative Options',
+              'Alternative Options / دوسرے معالج',
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Colors.black87,
+                color: StitchColors.onBackground,
               ),
             ),
             const SizedBox(height: 8),
@@ -618,11 +624,12 @@ class _VetListScreenState extends State<VetListScreen> {
     final diagnosis = widget.diagnosisResult['diagnosis'] ?? widget.diagnosisResult;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F9F6),
+      backgroundColor: StitchColors.background,
       appBar: AppBar(
-        title: const Text('Find a Vet'),
-        backgroundColor: const Color(0xFF0F6E56),
+        title: const Text('Find a Vet / معالج تلاش کریں'),
+        backgroundColor: StitchColors.primary,
         foregroundColor: Colors.white,
+        elevation: 0,
       ),
       body: _isLoadingLocation
           ? const Center(
@@ -630,10 +637,10 @@ class _VetListScreenState extends State<VetListScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF0F6E56)),
+                    valueColor: AlwaysStoppedAnimation<Color>(StitchColors.primary),
                   ),
                   SizedBox(height: 16),
-                  Text('Loading location data...'),
+                  Text('Loading location data... / معلومات لوڈ ہو رہی ہیں...', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w500)),
                 ],
               ),
             )
@@ -645,10 +652,10 @@ class _VetListScreenState extends State<VetListScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF0F6E56)),
-                          ),
+                            valueColor: AlwaysStoppedAnimation<Color>(StitchColors.primary),
+                  ),
                           SizedBox(height: 16),
-                          Text('Matching best veterinarian...'),
+                          Text('Matching best veterinarian... / بہترین معالج تلاش ہو رہا ہے...', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w500)),
                         ],
                       ),
                     )
@@ -657,7 +664,7 @@ class _VetListScreenState extends State<VetListScreen> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Icon(Icons.error_outline, size: 60, color: Colors.red),
+                              const Icon(Icons.error_outline, size: 60, color: StitchColors.error),
                               const SizedBox(height: 16),
                               Text('Error: $_errorMessage'),
                               const SizedBox(height: 16),

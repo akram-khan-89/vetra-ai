@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
+import '../theme/stitch_theme.dart';
 import 'vet_list_screen.dart';
 
 class DiagnosisScreen extends StatefulWidget {
@@ -30,7 +31,6 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
     });
 
     try {
-      // Assuming listenResult has 'data' containing 'symptoms' and 'animal_type', or 'vision_findings' directly
       final data = widget.listenResult['data'] ?? {};
       final visionFindingsRaw = widget.listenResult['vision_findings'] ?? data['vision_findings'] ?? [];
       
@@ -47,7 +47,7 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
         symptoms = symptomsData.split(',').map((e) => e.trim()).toList();
       }
 
-      // Merge vision findings into symptoms so backend doesn't crash on empty symptoms
+      // Merge vision findings into symptoms
       for (var f in visionFindings) {
         if (!symptoms.contains(f)) {
           symptoms.add(f);
@@ -74,9 +74,9 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
   }
 
   Color _getRiskColor(int score) {
-    if (score >= 7) return Colors.red;
+    if (score >= 7) return StitchColors.error;
     if (score >= 4) return Colors.orange;
-    return Colors.green;
+    return StitchColors.primary;
   }
 
   String _getUrgencyText(String? urgency) {
@@ -95,10 +95,12 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: StitchColors.background,
       appBar: AppBar(
-        title: const Text('Diagnosis Result'),
-        backgroundColor: const Color(0xFF0F6E56),
+        title: const Text('Diagnosis Result / تشخیص کا نتیجہ'),
+        backgroundColor: StitchColors.primary,
         foregroundColor: Colors.white,
+        elevation: 0,
       ),
       body: _isLoading
           ? const Center(
@@ -106,27 +108,31 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF0F6E56)),
+                    valueColor: AlwaysStoppedAnimation<Color>(StitchColors.primary),
                   ),
                   SizedBox(height: 16),
-                  Text('Analyzing symptoms...'),
+                  Text('Analyzing symptoms / تشخیص ہو رہی ہے...', style: TextStyle(fontWeight: FontWeight.w500, color: Colors.grey)),
                 ],
               ),
             )
           : _errorMessage != null
               ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.error_outline, size: 60, color: Colors.red),
-                      const SizedBox(height: 16),
-                      Text('Error: $_errorMessage'),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: _fetchDiagnosis,
-                        child: const Text('Retry'),
-                      ),
-                    ],
+                  child: Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.error_outline, size: 60, color: StitchColors.error),
+                        const SizedBox(height: 16),
+                        Text('Error: $_errorMessage', textAlign: TextAlign.center),
+                        const SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: _fetchDiagnosis,
+                          style: ElevatedButton.styleFrom(backgroundColor: StitchColors.primary),
+                          child: const Text('Retry'),
+                        ),
+                      ],
+                    ),
                   ),
                 )
               : _diagnosisResult == null
@@ -150,22 +156,36 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
     final reasoning = data['reasoning'] ?? 'No reasoning provided.';
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(24.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 1. Disease name card
-          Card(
-            elevation: 4,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          // 1. Disease name card with gradient and premium styling
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: StitchColors.surfaceContainerHigh, width: 1.5),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.015),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            clipBehavior: Clip.antiAlias,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                   decoration: const BoxDecoration(
-                    color: Color(0xFF0F6E56),
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+                    gradient: LinearGradient(
+                      colors: [StitchColors.primaryContainer, StitchColors.primary],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
                   ),
                   child: Text(
                     diseaseUrdu,
@@ -178,13 +198,13 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(20.0),
                   child: Text(
                     diseaseName,
                     style: const TextStyle(
-                      fontSize: 22,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: StitchColors.onBackground,
                     ),
                     textDirection: TextDirection.ltr,
                   ),
@@ -192,32 +212,35 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 24),
 
           // 2. Confidence bar
           const Text(
-            'Confidence',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            'Confidence / اعتماد کا تناسب',
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: StitchColors.onBackground),
           ),
           const SizedBox(height: 8),
           Row(
             children: [
               Expanded(
-                child: LinearProgressIndicator(
-                  value: confidence / 100,
-                  backgroundColor: Colors.grey[300],
-                  valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF0F6E56)),
-                  minHeight: 10,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: LinearProgressIndicator(
+                    value: confidence / 100,
+                    backgroundColor: StitchColors.surfaceContainerHigh,
+                    valueColor: const AlwaysStoppedAnimation<Color>(StitchColors.primary),
+                    minHeight: 10,
+                  ),
                 ),
               ),
               const SizedBox(width: 12),
               Text(
-                '${confidence.toInt()}% confidence',
-                style: const TextStyle(fontWeight: FontWeight.bold),
+                '${confidence.toInt()}%',
+                style: const TextStyle(fontWeight: FontWeight.bold, color: StitchColors.primary, fontSize: 15),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
 
           // 3. Risk badge & 4. Urgency text
           Row(
@@ -226,99 +249,115 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
               Chip(
                 label: Text(
                   'Risk Score: $riskScore',
-                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
                 ),
                 backgroundColor: _getRiskColor(riskScore),
+                side: BorderSide.none,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               ),
               if (urgency != null)
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                   decoration: BoxDecoration(
-                    color: Colors.amber.withOpacity(0.2),
+                    color: Colors.amber.shade50,
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.amber),
+                    border: Border.all(color: Colors.amber.shade300, width: 1.5),
                   ),
                   child: Text(
                     _getUrgencyText(urgency),
-                    style: const TextStyle(
-                      fontSize: 16,
+                    style: TextStyle(
+                      fontSize: 14,
                       fontWeight: FontWeight.bold,
-                      color: Colors.brown,
+                      color: Colors.amber.shade900,
                     ),
                   ),
                 ),
             ],
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 28),
 
-          // 5. Home care steps
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Home Care Steps',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              OutlinedButton.icon(
-                onPressed: () => setState(() => _showUrduHomeCare = !_showUrduHomeCare),
-                icon: Icon(
-                  _showUrduHomeCare ? Icons.g_translate : Icons.language,
-                  size: 16,
-                  color: const Color(0xFF0F6E56),
-                ),
-                label: Text(
-                  _showUrduHomeCare ? 'English' : 'اردو (Urdu)',
-                  style: const TextStyle(
-                    color: Color(0xFF0F6E56),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: Color(0xFF0F6E56)),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          // Choose which list to display based on toggle
-          Builder(
-            builder: (context) {
-              final bool isUrdu = _showUrduHomeCare && homeCareUrdu.isNotEmpty;
-              final List<dynamic> steps = isUrdu ? homeCareUrdu : homeCare;
-              if (steps.isEmpty) {
-                return const Text('No specific home care steps provided.');
-              }
-              return Column(
-                children: steps.map((step) => Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
-                    children: [
-                      Text(isUrdu ? ' •' : '• ', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                      Expanded(
-                        child: Text(
-                          step.toString(),
-                          style: const TextStyle(fontSize: 16),
-                          textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
+          // 5. Home care steps styled card
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: StitchColors.surfaceContainerHigh, width: 1.5),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Home Care Steps',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: StitchColors.onBackground),
+                    ),
+                    OutlinedButton.icon(
+                      onPressed: () => setState(() => _showUrduHomeCare = !_showUrduHomeCare),
+                      icon: Icon(
+                        _showUrduHomeCare ? Icons.g_translate : Icons.language,
+                        size: 14,
+                        color: StitchColors.primary,
+                      ),
+                      label: Text(
+                        _showUrduHomeCare ? 'English' : 'اردو',
+                        style: const TextStyle(
+                          color: StitchColors.primary,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
                         ),
                       ),
-                    ],
-                  ),
-                )).toList(),
-              );
-            },
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: StitchColors.primary, width: 1.5),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                // Choose which list to display based on toggle
+                Builder(
+                  builder: (context) {
+                    final bool isUrdu = _showUrduHomeCare && homeCareUrdu.isNotEmpty;
+                    final List<dynamic> steps = isUrdu ? homeCareUrdu : homeCare;
+                    if (steps.isEmpty) {
+                      return const Text('No specific home care steps provided.', style: TextStyle(color: Colors.grey));
+                    }
+                    return Column(
+                      children: steps.map((step) => Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 6.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
+                          children: [
+                            Text(isUrdu ? ' • ' : ' • ', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: StitchColors.primary)),
+                            Expanded(
+                              child: Text(
+                                step.toString(),
+                                style: const TextStyle(fontSize: 15, color: StitchColors.onBackground, height: 1.4),
+                                textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )).toList(),
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 32),
 
           // 6. "Find a Vet" large green button
           SizedBox(
             width: double.infinity,
-            height: 50,
+            height: 54,
             child: ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -329,28 +368,29 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF0F6E56),
+                backgroundColor: StitchColors.primary,
                 foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               ),
               child: const Text(
-                'Find a Vet',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                'Find a Vet / ڈاکٹر تلاش کریں',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
           ),
           const SizedBox(height: 16),
 
-          // 7. "View Agent Reasoning" small text link
+          // 7. "View Agent Reasoning" link
           Center(
             child: TextButton(
               onPressed: () {
                 _showReasoningBottomSheet(context, reasoning);
               },
               child: const Text(
-                'View Agent Reasoning',
+                'View Agent Reasoning / تفصیلات دیکھیں',
                 style: TextStyle(
-                  color: Color(0xFF0F6E56),
+                  color: StitchColors.primary,
+                  fontWeight: FontWeight.bold,
                   decoration: TextDecoration.underline,
                 ),
               ),
@@ -364,8 +404,9 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
   void _showReasoningBottomSheet(BuildContext context, String reasoning) {
     showModalBottomSheet(
       context: context,
+      backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (context) {
         return Container(
@@ -375,26 +416,28 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               const Text(
-                'Agent Reasoning',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                'Agent Reasoning / تفصیلی وجہ',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: StitchColors.primary),
               ),
               const SizedBox(height: 16),
               Expanded(
                 child: SingleChildScrollView(
                   child: Text(
                     reasoning,
-                    style: const TextStyle(fontSize: 16),
+                    style: const TextStyle(fontSize: 15, color: StitchColors.onBackground, height: 1.4),
                   ),
                 ),
               ),
               const SizedBox(height: 16),
               SizedBox(
                 width: double.infinity,
+                height: 50,
                 child: ElevatedButton(
                   onPressed: () => Navigator.pop(context),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF0F6E56),
+                    backgroundColor: StitchColors.primary,
                     foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
                   child: const Text('Close'),
                 ),
