@@ -34,7 +34,9 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
 
   Future<void> _saveBookingToHistory() async {
     final prefs = await SharedPreferences.getInstance();
-    final List<String> bookingsList = prefs.getStringList('bookingHistory') ?? [];
+    final loggedInPhone = prefs.getString('loggedInUserPhone') ?? '';
+    final key = 'bookingHistory_$loggedInPhone';
+    final List<String> bookingsList = prefs.getStringList(key) ?? [];
     
     // Add current booking
     final vetName = widget.bookingResult['vet_name'] ?? 'Doctor';
@@ -51,7 +53,7 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
     };
     
     bookingsList.insert(0, jsonEncode(bookingEntry));
-    await prefs.setStringList('bookingHistory', bookingsList);
+    await prefs.setStringList(key, bookingsList);
   }
 
   String _formatDateTime(String? isoString) {

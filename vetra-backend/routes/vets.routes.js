@@ -3,6 +3,21 @@ const router = express.Router();
 const { discoverAgent } = require('../agents/discover_agent');
 const { decideAgent } = require('../agents/decide_agent');
 
+// GET /api/v1/vets
+router.get('/', async (req, res) => {
+  try {
+    const fs = require('fs');
+    const path = require('path');
+    const vetsPath = path.join(__dirname, '../data/vets.json');
+    const vetsData = JSON.parse(fs.readFileSync(vetsPath, 'utf8'));
+    const vetsArray = Array.isArray(vetsData) ? vetsData : vetsData.vets;
+    res.json({ success: true, data: vetsArray });
+  } catch (error) {
+    console.error('[VETS ROUTE] Error loading vets:', error.message);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // GET /api/v1/vets/nearby
 router.get('/nearby', async (req, res) => {
   try {

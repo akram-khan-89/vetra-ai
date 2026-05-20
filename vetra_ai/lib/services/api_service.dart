@@ -86,6 +86,25 @@ class ApiService {
     }
   }
 
+  Future<List<dynamic>> getAllVets() async {
+    final url = Uri.parse('$baseUrl/api/v1/vets');
+    try {
+      final response = await http.get(
+        url,
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = jsonDecode(response.body);
+        return data['data'] ?? [];
+      } else {
+        throw Exception('Failed to get all vets: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error calling all vets API: $e');
+    }
+  }
+
   Future<Map<String, dynamic>> postDecide(List<dynamic> vets, Map<String, dynamic> diagnosis, String urgency) async {
     final url = Uri.parse('$baseUrl/api/v1/vets/decide');
     try {

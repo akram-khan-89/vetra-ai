@@ -23,34 +23,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
   int sheepCount = 0;
 
   bool _isLoading = true;
-  List<Map<String, dynamic>> bookingHistory = [];
 
   @override
   void initState() {
     super.initState();
     _loadProfileData();
-  }
-
-  Future<void> _loadProfileData() async {
+  }  Future<void> _loadProfileData() async {
     final prefs = await SharedPreferences.getInstance();
-    final List<String> bookingsList = prefs.getStringList('bookingHistory') ?? [];
+    final loggedInPhone = prefs.getString('loggedInUserPhone') ?? '';
+    
+    final keyName = 'farmerName_$loggedInPhone';
+    final keyPhone = 'phoneNumber_$loggedInPhone';
+    final keyLocation = 'location_$loggedInPhone';
+    final keyCows = 'cowsCount_$loggedInPhone';
+    final keyBuffaloes = 'buffaloesCount_$loggedInPhone';
+    final keyGoats = 'goatsCount_$loggedInPhone';
+    final keySheep = 'sheepCount_$loggedInPhone';
+
     setState(() {
-      farmerName = prefs.getString('farmerName') ?? 'Your Name / آپ کا نام';
-      phoneNumber = prefs.getString('phoneNumber') ?? 'Add Phone Number';
-      location = prefs.getString('location') ?? 'Add Location';
+      farmerName = prefs.getString(keyName) ?? 'Your Name / آپ کا نام';
+      phoneNumber = prefs.getString(keyPhone) ?? loggedInPhone;
+      location = prefs.getString(keyLocation) ?? 'Add Location';
       
-      cowsCount = prefs.getInt('cowsCount') ?? 0;
-      buffaloesCount = prefs.getInt('buffaloesCount') ?? 0;
-      goatsCount = prefs.getInt('goatsCount') ?? 0;
-      sheepCount = prefs.getInt('sheepCount') ?? 0;
-      
-      bookingHistory = bookingsList.map((item) {
-        try {
-          return jsonDecode(item) as Map<String, dynamic>;
-        } catch (e) {
-          return <String, dynamic>{};
-        }
-      }).where((item) => item.isNotEmpty).toList();
+      cowsCount = prefs.getInt(keyCows) ?? 0;
+      buffaloesCount = prefs.getInt(keyBuffaloes) ?? 0;
+      goatsCount = prefs.getInt(keyGoats) ?? 0;
+      sheepCount = prefs.getInt(keySheep) ?? 0;
       
       _isLoading = false;
     });
@@ -58,27 +56,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _saveProfileData(String name, String phone, String loc, int cows, int buffaloes, int goats, int sheep) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('farmerName', name);
-    await prefs.setString('phoneNumber', phone);
-    await prefs.setString('location', loc);
-    await prefs.setInt('cowsCount', cows);
-    await prefs.setInt('buffaloesCount', buffaloes);
-    await prefs.setInt('goatsCount', goats);
-    await prefs.setInt('sheepCount', sheep);
+    final loggedInPhone = prefs.getString('loggedInUserPhone') ?? '';
+
+    final keyName = 'farmerName_$loggedInPhone';
+    final keyPhone = 'phoneNumber_$loggedInPhone';
+    final keyLocation = 'location_$loggedInPhone';
+    final keyCows = 'cowsCount_$loggedInPhone';
+    final keyBuffaloes = 'buffaloesCount_$loggedInPhone';
+    final keyGoats = 'goatsCount_$loggedInPhone';
+    final keySheep = 'sheepCount_$loggedInPhone';
+
+    await prefs.setString(keyName, name.trim().isEmpty ? 'Your Name / آپ کا نام' : name.trim());
+    await prefs.setString(keyPhone, phone.trim().isEmpty ? loggedInPhone : phone.trim());
+    await prefs.setString(keyLocation, loc.trim().isEmpty ? 'Add Location' : loc.trim());
+    await prefs.setInt(keyCows, cows);
+    await prefs.setInt(keyBuffaloes, buffaloes);
+    await prefs.setInt(keyGoats, goats);
+    await prefs.setInt(keySheep, sheep);
     
     // Reload state to reflect changes on screen
     _loadProfileData();
   }
-
   void _showEditProfileDialog() {
-    final nameController = TextEditingController(text: farmerName);
-    final phoneController = TextEditingController(text: phoneNumber);
-    final locationController = TextEditingController(text: location);
+    final nameController = TextEditingController(
+      text: (farmerName == 'Your Name / آپ کا نام' || farmerName == 'Chaudhry Ali' || farmerName == 'Farmer Ali') ? '' : farmerName,
+    );
+    final phoneController = TextEditingController(
+      text: (phoneNumber == 'Add Phone Number' || phoneNumber == '0300-1234567') ? '' : phoneNumber,
+    );
+    final locationController = TextEditingController(
+      text: (location == 'Add Location' || location == 'Lahore, Pakistan') ? '' : location,
+    );
     
-    final cowsController = TextEditingController(text: cowsCount.toString());
-    final buffaloesController = TextEditingController(text: buffaloesCount.toString());
-    final goatsController = TextEditingController(text: goatsCount.toString());
-    final sheepController = TextEditingController(text: sheepCount.toString());
+    final cowsController = TextEditingController(text: cowsCount == 0 ? '' : cowsCount.toString());
+    final buffaloesController = TextEditingController(text: buffaloesCount == 0 ? '' : buffaloesCount.toString());
+    final goatsController = TextEditingController(text: goatsCount == 0 ? '' : goatsCount.toString());
+    final sheepController = TextEditingController(text: sheepCount == 0 ? '' : sheepCount.toString());
 
     showDialog(
       context: context,
@@ -292,131 +305,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                   
-                  const SizedBox(height: 32),
-                  const Text(
-                    'Booking History / بکنگ کی تاریخ',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: primaryColor,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  
-                  if (bookingHistory.isEmpty)
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: Colors.grey.shade200),
-                      ),
-                      child: Column(
-                        children: [
-                          Icon(Icons.calendar_today_outlined, size: 48, color: Colors.grey[400]),
-                          const SizedBox(height: 12),
-                          const Text(
-                            'No Bookings Yet / ابھی تک کوئی بکنگ نہیں ہے',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Your scheduled vet appointments will be listed here.',
-                            style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    )
-                  else
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: bookingHistory.length,
-                      itemBuilder: (context, index) {
-                        final booking = bookingHistory[index];
-                        final vetName = booking['vetName'] ?? 'Doctor';
-                        final time = booking['time'] ?? 'N/A';
-                        final fee = booking['fee'] ?? '1000';
-                        return Card(
-                          elevation: 0,
-                          color: Colors.white,
-                          margin: const EdgeInsets.only(bottom: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                            side: BorderSide(color: Colors.grey.shade200),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                            child: Row(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFE8F5E9),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: const Icon(Icons.vaccines, color: Color(0xFF0F6E56), size: 28),
-                                ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        vetName,
-                                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        time,
-                                        style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFF0F6E56).withOpacity(0.1),
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: const Text(
-                                        'Confirmed',
-                                        style: TextStyle(
-                                          color: Color(0xFF0F6E56),
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      'Rs $fee',
-                                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black87),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
                   const SizedBox(height: 30),
                   
                   ElevatedButton.icon(
-                    onPressed: () {
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (context) => const OnboardingScreen()),
-                        (route) => false,
-                      );
+                    onPressed: () async {
+                      final prefs = await SharedPreferences.getInstance();
+                      await prefs.setBool('isLoggedIn', false);
+                      await prefs.remove('loggedInUserPhone');
+                      if (context.mounted) {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => const OnboardingScreen()),
+                          (route) => false,
+                        );
+                      }
                     },
                     icon: const Icon(Icons.logout),
                     label: const Text('Log Out', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),

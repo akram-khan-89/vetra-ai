@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'placeholder_screen.dart';
+import 'booking_history_screen.dart';
+import 'all_vets_screen.dart';
 import 'voice_intake_screen.dart';
 import 'camera_screen.dart';
 import 'profile_screen.dart';
@@ -16,8 +17,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   static const List<Widget> _widgetOptions = <Widget>[
     HomeTabContent(),
-    PlaceholderScreen(text: 'Cases'),
-    PlaceholderScreen(text: 'Vets'),
+    BookingHistoryScreen(),
+    AllVetsScreen(),
     ProfileScreen(),
   ];
 
@@ -43,8 +44,8 @@ class _HomeScreenState extends State<HomeScreen> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.folder),
-            label: 'Cases',
+            icon: Icon(Icons.history),
+            label: 'Bookings',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.people),
