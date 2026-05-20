@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:share_plus/share_plus.dart';
 import '../services/api_service.dart';
 import 'booking_confirmation_screen.dart';
 
@@ -80,21 +82,39 @@ class _WhatsAppPreviewScreenState extends State<WhatsAppPreviewScreen> {
         _isLoading = false;
       });
 
-      if (launchWhatsApp && _whatsappLink != null) {
-        final uri = Uri.parse(_whatsappLink!);
-        try {
-          final success = await launchUrl(uri, mode: LaunchMode.externalApplication);
-          if (!success) {
-            await launchUrl(uri, mode: LaunchMode.platformDefault);
-          }
-        } catch (e) {
+      if (launchWhatsApp) {
+        final imagePath = widget.diagnosis['image_path'];
+        if (imagePath != null && File(imagePath).existsSync()) {
           try {
-            await launchUrl(uri, mode: LaunchMode.platformDefault);
-          } catch (_) {
+            await SharePlus.instance.share(
+              ShareParams(
+                text: _messageUrdu,
+                files: [XFile(imagePath)],
+              ),
+            );
+          } catch (e) {
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Could not launch WhatsApp or browser.')),
+                SnackBar(content: Text('Could not share image via WhatsApp: $e')),
               );
+            }
+          }
+        } else if (_whatsappLink != null) {
+          final uri = Uri.parse(_whatsappLink!);
+          try {
+            final success = await launchUrl(uri, mode: LaunchMode.externalApplication);
+            if (!success) {
+              await launchUrl(uri, mode: LaunchMode.platformDefault);
+            }
+          } catch (e) {
+            try {
+              await launchUrl(uri, mode: LaunchMode.platformDefault);
+            } catch (_) {
+              if (mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Could not launch WhatsApp or browser.')),
+                );
+              }
             }
           }
         }
@@ -235,7 +255,7 @@ class _WhatsAppPreviewScreenState extends State<WhatsAppPreviewScreen> {
                     ),
                   ),
 
-                  // Photo thumbnail placeholder
+                  // Photo thumbnail
                   Container(
                     margin: const EdgeInsets.only(bottom: 16.0),
                     child: Row(
@@ -253,11 +273,18 @@ class _WhatsAppPreviewScreenState extends State<WhatsAppPreviewScreen> {
                             borderRadius: BorderRadius.circular(8),
                             border: Border.all(color: Colors.grey.shade400),
                           ),
-                          child: const Icon(
-                            Icons.camera_alt,
-                            color: Colors.grey,
-                            size: 32,
-                          ),
+                          clipBehavior: Clip.antiAlias,
+                          child: (widget.diagnosis['image_path'] != null &&
+                                  File(widget.diagnosis['image_path']).existsSync())
+                              ? Image.file(
+                                  File(widget.diagnosis['image_path']),
+                                  fit: BoxFit.cover,
+                                )
+                              : const Icon(
+                                  Icons.camera_alt,
+                                  color: Colors.grey,
+                                  size: 32,
+                                ),
                         ),
                       ],
                     ),

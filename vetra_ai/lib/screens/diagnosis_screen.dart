@@ -30,8 +30,15 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
     });
 
     try {
-      // Assuming listenResult has 'data' containing 'symptoms' and 'animal_type'
+      // Assuming listenResult has 'data' containing 'symptoms' and 'animal_type', or 'vision_findings' directly
       final data = widget.listenResult['data'] ?? {};
+      final visionFindingsRaw = widget.listenResult['vision_findings'] ?? data['vision_findings'] ?? [];
+      
+      List<String> visionFindings = [];
+      if (visionFindingsRaw is List) {
+        visionFindings = visionFindingsRaw.map((e) => e.toString()).toList();
+      }
+
       final symptomsData = data['symptoms'];
       List<String> symptoms = [];
       if (symptomsData is List) {
@@ -40,9 +47,20 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
         symptoms = symptomsData.split(',').map((e) => e.trim()).toList();
       }
 
+      // Merge vision findings into symptoms so backend doesn't crash on empty symptoms
+      for (var f in visionFindings) {
+        if (!symptoms.contains(f)) {
+          symptoms.add(f);
+        }
+      }
+
+      if (symptoms.isEmpty) {
+        symptoms.add('Abnormal appearance (from photo)');
+      }
+
       final animalType = data['animal_type'] ?? 'unknown';
 
-      final result = await _apiService.postDiagnose(symptoms, animalType);
+      final result = await _apiService.postDiagnose(symptoms, animalType, visionFindings);
       setState(() {
         _diagnosisResult = result;
         _isLoading = false;
@@ -116,7 +134,10 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
   }
 
   Widget _buildResultContent() {
-    final data = _diagnosisResult!['diagnosis'] ?? {};
+    final data = Map<String, dynamic>.from(_diagnosisResult!['diagnosis'] ?? {});
+    if (widget.listenResult['image_path'] != null) {
+      data['image_path'] = widget.listenResult['image_path'];
+    }
     final diseaseName = data['primary_diagnosis'] ?? 'Unknown Disease';
     final diseaseUrdu = data['disease_name_urdu'] ?? 'نامعلوم بیماری';
     final confidence = (data['confidence_percent'] ?? 0).toDouble();

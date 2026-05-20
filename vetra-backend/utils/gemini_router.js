@@ -20,7 +20,8 @@ async function sleep(ms) {
  * @returns {object} - Unified response format.
  */
 async function callGemini(prompt, options = {}) {
-  const isUrgent = prompt.toLowerCase().includes('urgent') || prompt.toLowerCase().includes('emergency');
+  let promptText = typeof prompt === 'string' ? prompt : prompt[0];
+  const isUrgent = typeof promptText === 'string' && (promptText.toLowerCase().includes('urgent') || promptText.toLowerCase().includes('emergency'));
   
   let modelsToTry = [MODELS.PRIMARY, MODELS.FALLBACK];
   if (!isUrgent) {

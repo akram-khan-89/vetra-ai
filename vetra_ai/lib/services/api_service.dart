@@ -23,7 +23,29 @@ class ApiService {
     }
   }
 
-  Future<Map<String, dynamic>> postDiagnose(List<String> symptoms, String animalType) async {
+  Future<Map<String, dynamic>> postImageIntake(String base64Image, String caseId) async {
+    final url = Uri.parse('$baseUrl/api/v1/intake/image');
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'image_base64': base64Image,
+          'case_id': caseId,
+        }),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception('Failed to post image intake: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error calling image intake API: $e');
+    }
+  }
+
+  Future<Map<String, dynamic>> postDiagnose(List<String> symptoms, String animalType, [List<String>? visionFindings]) async {
     final url = Uri.parse('$baseUrl/api/v1/diagnose');
     try {
       final response = await http.post(
@@ -32,6 +54,7 @@ class ApiService {
         body: jsonEncode({
           'symptoms': symptoms,
           'animal_type': animalType,
+          if (visionFindings != null) 'vision_findings': visionFindings,
         }),
       );
 
